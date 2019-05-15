@@ -55,7 +55,7 @@ module.exports = merge(common, {
   module: {
     rules: [
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         use: [
           'style-loader', // Injects CSS into the DOM via a <style> tag
           {
@@ -78,15 +78,15 @@ module.exports = merge(common, {
     ]
   },
   plugins: [
-    new CopyWebpackPlugin([
-      'src/sw.js',
-      {
-        from: 'src/icons',
-        to: './icons',
-      },
-      'src/manifest.json',
-      'src/browserconfig.xml'
-    ]),
+    // new CopyWebpackPlugin([
+    //   'src/sw.js',
+    //   {
+    //     from: 'src/icons',
+    //     to: './icons',
+    //   },
+    //   'src/manifest.json',
+    //   'src/browserconfig.xml'
+    // ]),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',

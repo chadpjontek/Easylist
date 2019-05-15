@@ -20,7 +20,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist') // eslint-disable-line no-undef
   },
   plugins: [
-    new CleanWebpackPlugin(['dist'])
+    new CleanWebpackPlugin()
   ],
   module: {
     rules: [
