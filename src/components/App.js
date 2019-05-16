@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PaperBackground from './PaperBackground';
+import '../styles/App.scss';
 
-export default function App() {
-  const [count, setCount] = useState(0);
-  return (
-    <div className="my-class">
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
-    </div>
-  );
-}
+const App = () => {
+  return <PaperBackground />;
+};
+
+export default App;
