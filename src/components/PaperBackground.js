@@ -50,15 +50,20 @@ const PaperBackground = () => {
   // ... and store each in an array
   const hLines = [...Array(numLines)]
     .map((e, i) => {
-      let hLineStyle = {
-        height: `${lineHeight}px`,
-        top: `${(i * lineHeight) + lineHeight}px`
-      };
-      return <div
-        className={i !== 0 ? 'h-line' : ''}
-        style={hLineStyle}
-        key={i + 'h'}>
-      </div>;
+      if (i !== 0) {
+        let hLineStyle = {
+          height: `${lineHeight}px`,
+          top: `${(i * lineHeight) + lineHeight}px`
+        };
+        return (
+          <div
+            className='h-line'
+            style={hLineStyle}
+            key={i + 'h'}>
+          </div>
+        );
+      }
+      return;
     });
 
   // Store the vertical line in an array
@@ -78,7 +83,7 @@ const PaperBackground = () => {
 
   // Concat all the lines and holes and return them in div
   const lines = vLine.concat(hLines, holes);
-  return <div id='paper'>{lines}</div>;
+  return <div className='paper'>{lines}</div>;
 };
 
 export default PaperBackground;
