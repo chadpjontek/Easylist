@@ -28,7 +28,7 @@ const App = () => {
           <div className="note note--how3">The &quot;Save&quot; button will save a copy to your device. Create a free account if you wish to have cloud access on any device.</div>
           <div className="note note--how4">The &quot;Share&quot; button will copy the link to your list that you can then share with whomever you choose.</div>
           <div className="note note--how5">When viewing your lists, you will be able to delete, edit, or share them.</div>
-          <div className="note note--how6">Optionally you can create set up email notifications for when a task has been completed by someone you have shared a list with. These can be turned on or off for specific tasks.</div>
+          <div className="note note--how6">Optionally you can set up email notifications for when a task has been completed by someone you have shared a list with. These can be turned on or off for specific tasks.</div>
           <div className="note note--donate">This app is completely free and ad-free. If you enjoy it, please consider a donation. My son and I thank you for your support!
             <button className='btn-donate'></button>
           </div>
