@@ -6,15 +6,28 @@ import web from '../images/website.svg';
 import github from '../images/github.svg';
 import twitter from '../images/twitter.svg';
 import linkedin from '../images/linkedin.svg';
+import MenuModal from './MenuModal';
 
 const App = () => {
+  const [showMenu, setShowMenu] = useState(false);
+
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
   return (
     <div className='container container--app'>
       <header>
         <TitleHeader />
       </header>
       <main className='main'>
-        <button className='btn'>Menu</button>
+        <button className='btn btn--menu' onClick={toggleMenu}>
+          Menu
+        </button>
+        <MenuModal
+          showMenu={showMenu}
+          hide={toggleMenu}>
+        </MenuModal>
         <div className="container container--note">
           <h2 className="main__h2 main__h2--what">What?</h2>
           <div className="note note--what">Easy List is a task/list maker app that allows you to share your lists with others easily. It&apos;s free to use and there is no download required.</div>

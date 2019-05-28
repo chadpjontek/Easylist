@@ -30,7 +30,7 @@ body {
 
 .btn {
   display: block;
-  margin: 35px auto 10px;
+  margin: 0 auto;
   width: 127px;
   height: 47px;
   font-family: 'Raleway', sans-serif;
@@ -42,14 +42,17 @@ body {
   border-radius: 4px;
   transition: all .2s;
 
-  &:hover {
-    box-shadow: 0 3px 4px 1px #ccc;
+  &:hover, &:focus {
+    box-shadow: 0 3px 4px 1px #000;
   }
 
   &:active {
     background-color: #2b6391;
   }
+}
 
+.btn--menu {
+  margin: 35px auto 10px;
 }
 
 .main__h2 {
