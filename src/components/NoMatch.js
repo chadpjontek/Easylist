@@ -5,12 +5,12 @@ import useMenuModal from '../hooks/useMenuModal';
 const NoMatch = () => {
   const { isShowing, toggle } = useMenuModal();
   return (
-    <div>
+    <div className='container--app'>
       <MenuModal
         isShowing={isShowing}
         hide={toggle}>
       </MenuModal>
-      <div>404</div>
+      <h1 className='h1'>Opps. Nothing to see here. Error 404.</h1>
       <button className='btn btn--menu' onClick={toggle}>
         Menu
       </button>

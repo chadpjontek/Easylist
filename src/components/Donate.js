@@ -5,12 +5,12 @@ import useMenuModal from '../hooks/useMenuModal';
 const Donate = () => {
   const { isShowing, toggle } = useMenuModal();
   return (
-    <div>
+    <div className='container--app'>
       <MenuModal
         isShowing={isShowing}
         hide={toggle}>
       </MenuModal>
-      <div>Donate page</div>
+      <h1 className='h1'>Donate page</h1>
       <button className='btn btn--menu' onClick={toggle}>
         Menu
       </button>

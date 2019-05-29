@@ -5,12 +5,12 @@ import useMenuModal from '../hooks/useMenuModal';
 const CreateList = () => {
   const { isShowing, toggle } = useMenuModal();
   return (
-    <div>
+    <div className='container--app'>
       <MenuModal
         isShowing={isShowing}
         hide={toggle}>
       </MenuModal>
-      <div>Create a list page</div>
+      <h1 className='h1'>Create a list page</h1>
       <button className='btn btn--menu' onClick={toggle}>
         Menu
       </button>

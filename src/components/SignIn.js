@@ -5,12 +5,12 @@ import useMenuModal from '../hooks/useMenuModal';
 const SignIn = () => {
   const { isShowing, toggle } = useMenuModal();
   return (
-    <div>
+    <div className='container--app'>
       <MenuModal
         isShowing={isShowing}
         hide={toggle}>
       </MenuModal>
-      <div>Sign in page</div>
+      <h1 className='h1'>Sign in page</h1>
       <button className='btn btn--menu' onClick={toggle}>
         Menu
       </button>
