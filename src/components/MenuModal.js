@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import '../styles/MenuModal.scss';
+import { Link } from 'react-router-dom';
+import FocusTrap from 'focus-trap-react';
 
-const MenuModal = ({ showMenu, hide }) => {
-  // TODO: Add routes to each menu item
-  return showMenu ? createPortal(
+const MenuModal = ({ isShowing, hide }) => {
+  return isShowing ? createPortal(
     <div id='menuModal' className="modal">
-      <div className="modal-content">
-        <div className="menu-btn-group">
-          <button onClick={hide} className='btn btn--sign-in'>Sign in</button>
-          <button onClick={hide} className='btn btn--home'>Home</button>
-          <button onClick={hide} className='btn btn--make-list'>Make a list</button>
-          <button onClick={hide} className='btn btn--view-lists'>View lists</button>
-          <button onClick={hide} className='btn btn--donate'>Donate</button>
+      <FocusTrap>
+        <div className="modal-content" aria-modal="true" tabIndex="-1" role='dialog' aria-label="Menu">
+          <div className="menu-btn-group">
+            <Link to='/signin' onClick={hide} className='btn btn--sign-in'>Sign in</Link>
+            <Link exact to='/' onClick={hide} className='btn btn--home'>Home</Link>
+            <Link to='/lists/create' onClick={hide} className='btn btn--make-list'>Make a list</Link>
+            <Link to='/lists' onClick={hide} className='btn btn--view-lists'>View lists</Link>
+            <Link to='/donate' onClick={hide} className='btn btn--donate'>Donate</Link>
+          </div>
         </div>
-      </div>
+      </FocusTrap>
     </div>, document.getElementById('modal')
   ) : null;
 };

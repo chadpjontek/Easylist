@@ -18,6 +18,10 @@ body {
   padding: 0;
 }
 
+.u-lock-scroll {
+  overflow: hidden;
+}
+
 .container--app {
   max-width: 1024px;
   margin: 0 auto;

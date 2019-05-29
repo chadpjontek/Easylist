@@ -33,12 +33,16 @@
   background: #E0EFFA;
 
   .menu-btn-group {
-    justify-self: center;
-    align-self: center;
+    justify-items: center;
+    align-items: center;
     width: 127px;
     height: 283px;
     display: grid;
     grid-template-rows: repeat(5, 1fr);
 
+    a {
+      padding-top: 12px;
+      text-decoration: none;
+    }
   }
 }
