@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MenuModal from './MenuModal';
 import useMenuModal from '../hooks/useMenuModal';
 
 const SignIn = () => {
+  useEffect(() => {
+    document.title = 'Sign in';
+  });
   const { isShowing, toggle } = useMenuModal();
   return (
     <div className='container--app'>

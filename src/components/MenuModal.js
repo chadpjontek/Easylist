@@ -12,7 +12,7 @@ const MenuModal = ({ isShowing, hide }) => {
           <div className="menu-btn-group">
             <Link to='/signin' onClick={hide} className='btn btn--sign-in'>Sign in</Link>
             <Link exact to='/' onClick={hide} className='btn btn--home'>Home</Link>
-            <Link to='/lists/create' onClick={hide} className='btn btn--make-list'>Make a list</Link>
+            <Link to='/lists/create' onClick={hide} className='btn btn--make-list'>Create list</Link>
             <Link to='/lists' onClick={hide} className='btn btn--view-lists'>View lists</Link>
             <Link to='/donate' onClick={hide} className='btn btn--donate'>Donate</Link>
           </div>

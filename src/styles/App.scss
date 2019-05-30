@@ -67,6 +67,12 @@ body {
   margin: 35px auto 10px;
 }
 
+.btn--menu-bottom {
+  position: fixed;
+  left: calc(50% - 127px/2 + 0.5px);
+  bottom: 10px;
+}
+
 .main__h2 {
   padding: 0;
   font-weight: 800;

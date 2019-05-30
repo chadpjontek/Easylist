@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import TitleHeader from './TitleHeader';
 import MenuModal from './MenuModal';
 import useMenuModal from '../hooks/useMenuModal';
@@ -9,8 +9,10 @@ import twitter from '../images/twitter.svg';
 import linkedin from '../images/linkedin.svg';
 
 const Home = () => {
+  useEffect(() => {
+    document.title = 'EasyList';
+  });
   const { isShowing, toggle } = useMenuModal(false);
-
   return (
     <div className='container container--app'>
       <header>

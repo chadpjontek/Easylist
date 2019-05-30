@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MenuModal from './MenuModal';
 import useMenuModal from '../hooks/useMenuModal';
 
 const Donate = () => {
+  useEffect(() => {
+    document.title = 'Donate';
+  });
   const { isShowing, toggle } = useMenuModal();
   return (
     <div className='container--app'>
