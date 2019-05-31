@@ -221,6 +221,11 @@ body {
 }
 
 /*=== media queries ===*/
+@media screen and (max-height: 460px) {
+  .container--app {
+    background: white;
+  }
+}
 
 /* Greater than 799 */
 @media screen and (min-width: 1000px) {
