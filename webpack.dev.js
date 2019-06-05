@@ -41,7 +41,8 @@ module.exports = merge(common, {
   devtool: 'source-map',
   devServer: {
     contentBase: './dist',
-    port: 8080
+    port: 8080,
+    historyApiFallback: true
   },
   optimization: {
     minimizer: [

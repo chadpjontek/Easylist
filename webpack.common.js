@@ -17,7 +17,8 @@ module.exports = {
   output: {
     filename: './[name].bundle.js',
     chunkFilename: './[name].bundle.js',
-    path: path.resolve(__dirname, 'dist') // eslint-disable-line no-undef
+    path: path.resolve(__dirname, 'dist'), // eslint-disable-line no-undef
+    publicPath: '/'
   },
   plugins: [
     new CleanWebpackPlugin()

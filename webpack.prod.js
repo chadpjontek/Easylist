@@ -96,21 +96,22 @@ module.exports = merge(common, {
     ]
   },
   plugins: [
-    // new CopyWebpackPlugin([
-    //   {
-    //     from: 'src/sw.js',
-    //     to: '.',
-    //     transform(content) {
-    //       return Promise.resolve(Buffer.from(UglifyES.minify(content.toString()).code, 'utf8'));
-    //     }
-    //   },
-    //   {
-    //     from: 'src/icons',
-    //     to: './icons',
-    //   },
-    //   'src/manifest.json',
-    //   'src/browserconfig.xml'
-    // ]),
+    new CopyWebpackPlugin([
+      // {
+      //   from: 'src/sw.js',
+      //   to: '.',
+      //   transform(content) {
+      //     return Promise.resolve(Buffer.from(UglifyES.minify(content.toString()).code, 'utf8'));
+      //   }
+      // },
+      // {
+      //   from: 'src/icons',
+      //   to: './icons',
+      // },
+      // 'src/manifest.json',
+      // 'src/browserconfig.xml'
+      'src/_redirects'
+    ]),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',
