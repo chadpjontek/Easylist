@@ -24,7 +24,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 /**
  * This plugin will minify the JS
  */
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 /**
  * A JavaScript parser, mangler/compressor and beautifier toolkit for ES6+.
@@ -63,7 +63,7 @@ module.exports = merge(common, {
   mode: 'production',
   optimization: {
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         cache: true,
         parallel: true
       }),
