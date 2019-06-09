@@ -16,7 +16,7 @@ const EditList = (props) => {
         hide={toggle}>
       </MenuModal>
       <h1 className='h1'>{listName}</h1>
-      <button className='btn btn--menu' onClick={toggle}>
+      <button className='btn btn--menu-bottom ' onClick={toggle}>
         Menu
       </button>
     </div>

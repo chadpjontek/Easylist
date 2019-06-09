@@ -1,20 +1,26 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import SignIn from './SignIn';
-import Home from './Home';
-import CreateList from './CreateList';
-import ViewLists from './ViewLists';
-import Donate from './Donate';
-import EditList from './EditList';
-import NoMatch from './NoMatch';
+
+import Loading from './Loading';
+
 import '../styles/App.scss';
 import 'react-toastify/dist/ReactToastify.min.css';
+
+// lazy load routes
+const Home = lazy(() => import(/* webpackChunkName: "Home" */'./Home'));
+const SignIn = lazy(() => import(/* webpackChunkName: "SignIn" */'./SignIn'));
+const CreateList = lazy(() => import(/* webpackChunkName: "CreateList" */'./CreateList'));
+const ViewLists = lazy(() => import(/* webpackChunkName: "ViewLists" */'./ViewLists'));
+const Donate = lazy(() => import(/* webpackChunkName: "Donate" */'./Donate'));
+const EditList = lazy(() => import(/* webpackChunkName: "EditList" */'./EditList'));
+const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'));
+
 
 const App = () => {
 
   return (
-    <div>
+    <Suspense fallback={Loading}>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path='/signin' component={SignIn} />
@@ -26,7 +32,7 @@ const App = () => {
         <Route component={NoMatch} />
       </Switch>
       <ToastContainer />
-    </div>
+    </Suspense>
   );
 };
 
