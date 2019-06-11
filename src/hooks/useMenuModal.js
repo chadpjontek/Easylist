@@ -4,16 +4,16 @@ import { useState } from 'react';
  * React hook that returns the state of the modal and ability to toggle it.
  */
 const useMenuModal = () => {
-  const [isShowing, setIsShowing] = useState(false);
+  const [isShowingMenu, setIsShowingMenu] = useState(false);
 
-  const toggle = () => {
+  const toggleMenu = () => {
     document.querySelector('html').classList.toggle('u-lock-scroll');
-    setIsShowing(!isShowing);
+    setIsShowingMenu(!isShowingMenu);
   };
 
   return {
-    isShowing,
-    toggle,
+    isShowingMenu,
+    toggleMenu,
   };
 };
 

@@ -6,15 +6,15 @@ const Donate = () => {
   useEffect(() => {
     document.title = 'Donate';
   });
-  const { isShowing, toggle } = useMenuModal();
+  const { isShowingMenu, toggleMenu } = useMenuModal();
   return (
-    <div className='container--app'>
+    <div className='container container--app'>
       <MenuModal
-        isShowing={isShowing}
-        hide={toggle}>
+        isShowing={isShowingMenu}
+        hide={toggleMenu}>
       </MenuModal>
       <h1 className='h1'>Donate page</h1>
-      <button className='btn btn--menu' onClick={toggle}>
+      <button className='btn btn--menu' onClick={toggleMenu}>
         Menu
       </button>
     </div>

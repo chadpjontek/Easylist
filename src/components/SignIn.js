@@ -6,15 +6,15 @@ const SignIn = () => {
   useEffect(() => {
     document.title = 'Sign in';
   });
-  const { isShowing, toggle } = useMenuModal();
+  const { isShowingMenu, toggleMenu } = useMenuModal();
   return (
-    <div className='container--app'>
+    <div className='container container--app'>
       <MenuModal
-        isShowing={isShowing}
-        hide={toggle}>
+        isShowing={isShowingMenu}
+        hide={toggleMenu}>
       </MenuModal>
       <h1 className='h1'>Sign in page</h1>
-      <button className='btn btn--menu' onClick={toggle}>
+      <button className='btn btn--menu' onClick={toggleMenu}>
         Menu
       </button>
     </div>

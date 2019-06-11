@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import MenuModal from './MenuModal';
+import Popup from './Popup';
 import useMenuModal from '../hooks/useMenuModal';
+import usePopup from '../hooks/usePopup';
 import { cleanInput, validateListName } from '../helpers';
 import '../styles/CreateList.scss';
 
@@ -9,7 +10,9 @@ const CreateList = (props) => {
   // Get/set state of text input
   const [inputValue, setInputValue] = useState('');
   // Get/set state of MenuModal
-  const { isShowing, toggle } = useMenuModal();
+  const { isShowingMenu, toggleMenu } = useMenuModal();
+  // Get/set state of MenuModal
+  const { isShowingPopup, togglePopup, message } = usePopup();
   // Set title on page render
   useEffect(() => {
     document.title = 'Create a list';
@@ -22,10 +25,8 @@ const CreateList = (props) => {
     event.preventDefault();
     // Get the list name from text input, validate, and sanitize.
     if (!validateListName(inputValue)) {
-      return toast.error(
-        'Name must be between 3 and 24 characters and not start with a space.', {
-          position: toast.POSITION.TOP_CENTER
-        });
+      const msg = 'Name must be between 3 and 24 characters and not start with a space.';
+      return togglePopup(msg);
     }
     const listName = cleanInput(inputValue);
     // Try to add list to indexedDB and redirect to edit page
@@ -34,9 +35,9 @@ const CreateList = (props) => {
       addListPromise(listName);
       props.history.push(`/lists/${encodeURIComponent(listName)}/edit`, { listName });
     } catch (error) {
-      toast.error('Couldn\'t add list', {
-        position: toast.POSITION.TOP_CENTER
-      });
+      console.log('made it');
+      const msg = 'Couldn\'t add list';
+      togglePopup(msg);
       throw new Error(error);
     }
   };
@@ -44,11 +45,16 @@ const CreateList = (props) => {
   const handleChange = (event) => setInputValue(event.target.value);
 
   return (
-    <div className='container--app'>
+    <div className='container container--app'>
       <MenuModal
-        isShowing={isShowing}
-        hide={toggle}>
+        isShowing={isShowingMenu}
+        hide={toggleMenu}>
       </MenuModal>
+      <Popup
+        isShowing={isShowingPopup}
+        text={message}
+        hide={togglePopup}>
+      </Popup>
       <form className='form'>
         <div className='input-container'>
           <label className='label'>List name: </label>
@@ -66,7 +72,7 @@ const CreateList = (props) => {
           value='Create list'
           onClick={createList} />
       </form>
-      <button className='btn btn--menu-bottom ' onClick={toggle}>
+      <button className='btn btn--menu-bottom ' onClick={toggleMenu}>
         Menu
       </button>
     </div>

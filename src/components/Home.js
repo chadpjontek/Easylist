@@ -12,20 +12,20 @@ const Home = () => {
   useEffect(() => {
     document.title = 'EasyList';
   });
-  const { isShowing, toggle } = useMenuModal(false);
+  const { isShowingMenu, toggleMenu } = useMenuModal(false);
   return (
-    <div className='container container--app'>
+    <div className='container container--home'>
       <header>
         <TitleHeader />
       </header>
       <main className='main'>
-        <button className='btn btn--menu' onClick={toggle}>
+        <button className='btn btn--menu' onClick={toggleMenu}>
           Menu
         </button>
         <MenuModal
-          isShowing={isShowing}
-          hide={toggle} />
-        <div className="container container--note">
+          isShowing={isShowingMenu}
+          hide={toggleMenu} />
+        <div className="container--note">
           <h2 className="main__h2 main__h2--what">What?</h2>
           <div className="note note--what">Easy List is a task/list maker app that allows you to share your lists with others easily. It&apos;s free to use and there is no download required.</div>
           <h2 className="main__h2 main__h2--why">Why?</h2>

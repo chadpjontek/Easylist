@@ -1,11 +1,11 @@
 import React, { Suspense, lazy } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { useTransition, animated } from 'react-spring';
 
 import Loading from './Loading';
+import useRouter from '../hooks/useRouter';
 
 import '../styles/App.scss';
-import 'react-toastify/dist/ReactToastify.min.css';
 
 // lazy load routes
 const Home = lazy(() => import(/* webpackChunkName: "Home" */'./Home'));
@@ -18,11 +18,22 @@ const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'))
 
 
 const App = () => {
-
-  return (
-    <div>
-      <Suspense fallback={Loading}>
-        <Switch>
+  // Store location history
+  const { location } = useRouter();
+  // Create route page animations
+  const transitions = useTransition(location, location => location.pathname, {
+    from: { transform: 'translate3d(-100%, -20px, 0) scale(1.2)' },
+    enter: { transform: 'translate3d(0%, 0, 0) scale(1)' },
+    leave: { transform: 'translate3d(100%, 20px, 0) scale(0.8)' },
+    config: { mass: 1, tension: 280, friction: 40, clamp: true }
+  });
+  //
+  return transitions.map(({ item, props, key }) => (
+    <animated.div
+      key={key}
+      style={{ ...props, display: 'flex', justifyContent: 'center' }}>
+      <Suspense fallback={<Loading />}>
+        <Switch location={item}>
           <Route exact path="/" component={Home} />
           <Route path='/signin' component={SignIn} />
           <Route exact path="/lists/create" component={CreateList} />
@@ -32,10 +43,9 @@ const App = () => {
           {/* when none of the above match, <NoMatch> will be rendered */}
           <Route component={NoMatch} />
         </Switch>
-        <ToastContainer />
       </Suspense>
-    </div>
-  );
+    </animated.div>
+  ));
 };
 
 export default App;

@@ -4,19 +4,19 @@ import useMenuModal from '../hooks/useMenuModal';
 
 const EditList = (props) => {
   // destruct to get listName from React Router's state history
-  const { listName } = props.history.location.state;
+  const { listName } = props.history.location.state || { listName };
   useEffect(() => {
     document.title = 'Edit list';
   });
-  const { isShowing, toggle } = useMenuModal();
+  const { isShowingMenu, toggleMenu } = useMenuModal();
   return (
-    <div className='container--app'>
+    <div className='container container--app'>
       <MenuModal
-        isShowing={isShowing}
-        hide={toggle}>
+        isShowing={isShowingMenu}
+        hide={toggleMenu}>
       </MenuModal>
       <h1 className='h1'>{listName}</h1>
-      <button className='btn btn--menu-bottom ' onClick={toggle}>
+      <button className='btn btn--menu-bottom ' onClick={toggleMenu}>
         Menu
       </button>
     </div>
