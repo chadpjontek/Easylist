@@ -4,6 +4,8 @@ import { useTransition, animated } from 'react-spring';
 
 import Loading from './Loading';
 import useRouter from '../hooks/useRouter';
+import useMenuModal from '../hooks/useMenuModal';
+import MenuModal from '../components/MenuModal';
 
 import '../styles/App.scss';
 
@@ -22,30 +24,44 @@ const App = () => {
   const { location } = useRouter();
   // Create route page animations
   const transitions = useTransition(location, location => location.pathname, {
-    from: { transform: 'translate3d(-100%, -20px, 0) scale(1.2)' },
-    enter: { transform: 'translate3d(0%, 0, 0) scale(1)' },
-    leave: { transform: 'translate3d(100%, 20px, 0) scale(0.8)' },
+    from: { transform: 'translate3d(-100%, 0, 0)' },
+    enter: { transform: 'translate3d(0, 0, 0)' },
+    leave: { transform: 'translate3d(0, 0, 0)' },
     config: { mass: 1, tension: 280, friction: 40, clamp: true }
   });
+  // Get/set state of MenuModal
+  const { isShowingMenu, toggleMenu } = useMenuModal();
   //
-  return transitions.map(({ item, props, key }) => (
-    <animated.div
-      key={key}
-      style={{ ...props, display: 'flex', justifyContent: 'center' }}>
-      <Suspense fallback={<Loading />}>
-        <Switch location={item}>
-          <Route exact path="/" component={Home} />
-          <Route path='/signin' component={SignIn} />
-          <Route exact path="/lists/create" component={CreateList} />
-          <Route exact path="/lists" component={ViewLists} />
-          <Route path="/donate" component={Donate} />
-          <Route path="/lists/:name/edit" component={EditList} />
-          {/* when none of the above match, <NoMatch> will be rendered */}
-          <Route component={NoMatch} />
-        </Switch>
-      </Suspense>
-    </animated.div>
-  ));
+  return (
+    <div>
+      <nav>
+        <button className='btn btn-menu' onClick={toggleMenu}>
+          Menu
+        </button>
+      </nav>
+      <MenuModal
+        isShowing={isShowingMenu}
+        hide={toggleMenu} />
+      {transitions.map(({ item, props, key }) => (
+        <animated.div
+          key={key}
+          style={{ ...props, display: 'flex', justifyContent: 'center' }}>
+          <Suspense fallback={<Loading />}>
+            <Switch location={item}>
+              <Route exact path="/" component={Home} />
+              <Route path='/signin' component={SignIn} />
+              <Route exact path="/lists/create" component={CreateList} />
+              <Route exact path="/lists" component={ViewLists} />
+              <Route path="/donate" component={Donate} />
+              <Route path="/lists/:name/edit" component={EditList} />
+              {/* when none of the above match, <NoMatch> will be rendered */}
+              <Route component={NoMatch} />
+            </Switch>
+          </Suspense>
+        </animated.div>
+      ))}
+    </div>
+  );
 };
 
 export default App;

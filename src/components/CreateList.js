@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import MenuModal from './MenuModal';
 import Popup from './Popup';
-import useMenuModal from '../hooks/useMenuModal';
 import usePopup from '../hooks/usePopup';
 import { cleanInput, validateListName } from '../helpers';
 import '../styles/CreateList.scss';
@@ -9,8 +7,6 @@ import '../styles/CreateList.scss';
 const CreateList = (props) => {
   // Get/set state of text input
   const [inputValue, setInputValue] = useState('');
-  // Get/set state of MenuModal
-  const { isShowingMenu, toggleMenu } = useMenuModal();
   // Get/set state of MenuModal
   const { isShowingPopup, togglePopup, message } = usePopup();
   // Set title on page render
@@ -45,11 +41,7 @@ const CreateList = (props) => {
   const handleChange = (event) => setInputValue(event.target.value);
 
   return (
-    <div className='container container--app'>
-      <MenuModal
-        isShowing={isShowingMenu}
-        hide={toggleMenu}>
-      </MenuModal>
+    <div className='container'>
       <Popup
         isShowing={isShowingPopup}
         text={message}
@@ -72,9 +64,6 @@ const CreateList = (props) => {
           value='Create list'
           onClick={createList} />
       </form>
-      <button className='btn btn--menu-bottom ' onClick={toggleMenu}>
-        Menu
-      </button>
     </div>
   );
 };

@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import TitleHeader from './TitleHeader';
-import MenuModal from './MenuModal';
-import useMenuModal from '../hooks/useMenuModal';
 import ourPic from '../images/our-pic.jpg';
 import web from '../images/website.svg';
 import github from '../images/github.svg';
@@ -9,22 +7,16 @@ import twitter from '../images/twitter.svg';
 import linkedin from '../images/linkedin.svg';
 
 const Home = () => {
+  const [title] = useState('EasyList');
   useEffect(() => {
-    document.title = 'EasyList';
-  });
-  const { isShowingMenu, toggleMenu } = useMenuModal(false);
+    document.title = title;
+  }, [title]);
   return (
-    <div className='container container--home'>
+    <div className='container'>
       <header>
         <TitleHeader />
       </header>
       <main className='main'>
-        <button className='btn btn--menu' onClick={toggleMenu}>
-          Menu
-        </button>
-        <MenuModal
-          isShowing={isShowingMenu}
-          hide={toggleMenu} />
         <div className="container--note">
           <h2 className="main__h2 main__h2--what">What?</h2>
           <div className="note note--what">Easy List is a task/list maker app that allows you to share your lists with others easily. It&apos;s free to use and there is no download required.</div>
