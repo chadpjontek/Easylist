@@ -15,6 +15,13 @@ const idbPromise = openDB('easylist', 1, {
  */
 const addListPromise = async (name) => (await idbPromise).add('lists', { name });
 
+/**
+ * Returns a promise that deletes a list from indexedDB
+ * @param {string} listName - The name of the list to be deleted
+ */
+const deleteListPromise = async (id) => (await idbPromise).delete('lists', id);
+
 export {
-  addListPromise
+  addListPromise,
+  deleteListPromise
 };

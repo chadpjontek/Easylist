@@ -10,8 +10,8 @@ const MenuModal = ({ isShowing, hide }) => {
       <FocusTrap>
         <div className="modal-content" aria-modal="true" tabIndex="-1" role='dialog' aria-label="Menu">
           <div className="menu-btn-group">
-            <Link to='/signin' onClick={hide} className='btn btn--sign-in'>Sign in</Link>
             <Link exact to='/' onClick={hide} className='btn btn--home'>Home</Link>
+            <Link to='/signin' onClick={hide} className='btn btn--sign-in'>Sign in</Link>
             <Link to='/lists/create' onClick={hide} className='btn btn--make-list'>Create list</Link>
             <Link to='/lists' onClick={hide} className='btn btn--view-lists'>View lists</Link>
             <Link to='/donate' onClick={hide} className='btn btn--donate'>Donate</Link>

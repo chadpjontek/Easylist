@@ -13,9 +13,7 @@ const Home = () => {
   }, [title]);
   return (
     <div className='container'>
-      <header>
-        <TitleHeader />
-      </header>
+      <TitleHeader />
       <main className='main'>
         <div className="container--note">
           <h2 className="main__h2 main__h2--what">What?</h2>
