@@ -7,7 +7,9 @@ const InputForm = (props) => {
   const { handleSubmit, handleChange, inputContent } = props;
   return (
     <form onSubmit={handleSubmit}>
-      <input type='text' onChange={handleChange} />
+      <input id='input' type='text' required onChange={handleChange} />
+      <span className='bar'></span>
+      <label htmlFor='input'>Add item</label>
     </form>
   );
 };
