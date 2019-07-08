@@ -18,7 +18,6 @@ const InputForm = (props) => {
 // Item
 const Item = (props) => {
   const { item, deleteItem } = props;
-  console.log(props);
   // Calculate the available screen space to add item
   const screenSpace = window.innerWidth - 80;
   // Create regex to determine where to split string into array
@@ -60,12 +59,22 @@ const EditList = (props) => {
   const [isShowingForm, setIsShowingForm] = useState(false);
   const [inputContent, setInputContent] = useState('');
   const [items, setItems] = useState([]);
+  const [wasItemAdded, setWasItemAdded] = useState(false);
+
+  // scroll to bottom if new item added
+  useEffect(() => {
+    if (wasItemAdded) {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  }, [items]);
 
 
   // Add item to list
   const addItem = e => {
     e.preventDefault();
     setItems([...items, { id: uuid(), content: inputContent }]);
+    setInputContent('');
+    setWasItemAdded(true);
   };
 
   // Handle text input changes
@@ -77,6 +86,7 @@ const EditList = (props) => {
   const deleteItem = id => {
     const itemList = items.filter(item => item.id !== id);
     setItems(itemList);
+    setWasItemAdded(false);
   };
 
   return (
@@ -86,7 +96,7 @@ const EditList = (props) => {
         addItem={addItem}
         handleChange={handleChange}
         inputContent={inputContent} />
-      <ul>
+      <ul id='ul'>
         {items.map((item) => <Item key={item.id} item={item} deleteItem={() => deleteItem(item.id)} />)}
       </ul>
     </div>
