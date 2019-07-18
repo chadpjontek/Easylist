@@ -7,7 +7,7 @@ import '../styles/CreateList.scss';
 const CreateList = (props) => {
   // Get/set state of text input
   const [inputValue, setInputValue] = useState('');
-  // Get/set state of MenuModal
+  // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
   // Set title on page render
   useEffect(() => {

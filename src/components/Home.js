@@ -12,7 +12,7 @@ const Home = () => {
     document.title = title;
   }, [title]);
   return (
-    <div className='container'>
+    <div className='container container-home'>
       <TitleHeader />
       <main className='main'>
         <div className="container--note">
