@@ -6,9 +6,24 @@ import nestedList from '../images/nested-list.svg';
 import notify from '../images/notify.svg';
 import ol from '../images/ol.svg';
 import underline from '../images/underline.svg';
+import save from '../images/save-icon.svg';
+import { useStateValue } from '../hooks/stateManager';
 import '../styles/EditList.scss';
 
 const EditTools = (props) => {
+  const [{ name, items }] = useStateValue();
+  const saveList = async () => {
+    try {
+      const list = { name, items };
+      const { updateListPromise } = await import(/* webpackChunkName: "updateListPromise" */'../helpers/dbhelper');
+      await updateListPromise(list);
+      //TODO: redirect to list page
+
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   return (
     <div className="edit">
       <div className='row'>
@@ -18,11 +33,6 @@ const EditTools = (props) => {
         <div className="column">
           <button className='btn-edit'>
             <img src={editCheck} alt="toggle checkboxes" />
-          </button>
-        </div>
-        <div className="column">
-          <button className='btn-edit highlight'>
-            <img src={nestedList} alt="link to other list" />
           </button>
         </div>
         <div className="column">
@@ -42,7 +52,17 @@ const EditTools = (props) => {
         </div>
         <div className="column">
           <button className='btn-edit highlight'>
+            <img src={nestedList} alt="link to other list" />
+          </button>
+        </div>
+        <div className="column">
+          <button className='btn-edit highlight'>
             <img src={notify} alt="toggle notification" />
+          </button>
+        </div>
+        <div className="column">
+          <button className='btn-edit success' onClick={saveList}>
+            <img src={save} alt="save list" />
           </button>
         </div>
       </div>

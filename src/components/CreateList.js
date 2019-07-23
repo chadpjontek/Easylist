@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
 import { cleanInput, validateListName } from '../helpers';
+import { useStateValue } from '../hooks/stateManager';
 import '../styles/CreateList.scss';
 
 const CreateList = (props) => {
@@ -13,26 +14,34 @@ const CreateList = (props) => {
   useEffect(() => {
     document.title = 'Create a list';
   });
-
+  const [{ items }, dispatch] = useStateValue();
   /**
    * Function to create a new list
    */
   const createList = async () => {
     event.preventDefault();
+
     // Get the list name from text input, validate, and sanitize.
     if (!validateListName(inputValue)) {
       const msg = 'Name must be between 3 and 24 characters and not start with a space.';
       return togglePopup(msg);
     }
     const listName = cleanInput(inputValue);
+
+    // clear any previous item state
+    dispatch({
+      type: 'updateItems',
+      items: []
+    });
+
     // Try to add list to indexedDB and redirect to edit page
     try {
       const { addListPromise } = await import(/* webpackChunkName: "addListPromise" */'../helpers/dbhelper');
-      addListPromise(listName);
+      const list = { name: listName, items: [] };
+      await addListPromise(list);
       props.history.push(`/lists/${encodeURIComponent(listName)}/edit`, { listName });
     } catch (error) {
-      console.log('made it');
-      const msg = 'Couldn\'t add list';
+      const msg = 'Couldn\'t add list. List names must be unique.';
       togglePopup(msg);
       throw new Error(error);
     }

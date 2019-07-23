@@ -32,33 +32,27 @@ const Item = (props) => {
   );
 };
 
-
 const EditList = (props) => {
   // destruct to get listName from React Router's state history
   const { listName } = props.history.location.state || { listName };
-  // get/set listName from global state
-  const [{ currentList }, dispatch] = useStateValue();
-  useEffect(() => {
-    // store listname in global state for header component
-    dispatch({
-      type: 'changeList',
-      newList: listName || 'error'
-    });
-  }, [listName]);
+  const [{ items }, dispatch] = useStateValue();
   useEffect(() => {
     document.title = 'Edit list';
+    dispatch({
+      type: 'updateName',
+      name: listName
+    });
   }, [listName]);
 
   // state
-  const [isOrderedList, setIsOrderedList] = useState(false);
-  const [isCheckbox, setIsCheckbox] = useState(false);
-  const [isShowingMore, setIsShowingMore] = useState(false);
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderlined, setIsUnderlined] = useState(false);
-  const [isShowingForm, setIsShowingForm] = useState(false);
+  // const [isOrderedList, setIsOrderedList] = useState(false);
+  // const [isCheckbox, setIsCheckbox] = useState(false);
+  // const [isShowingMore, setIsShowingMore] = useState(false);
+  // const [isBold, setIsBold] = useState(false);
+  // const [isItalic, setIsItalic] = useState(false);
+  // const [isUnderlined, setIsUnderlined] = useState(false);
+  // const [isShowingForm, setIsShowingForm] = useState(false);
   const [inputContent, setInputContent] = useState('');
-  const [items, setItems] = useState([]);
   const [wasItemAdded, setWasItemAdded] = useState(false);
 
   // scroll to bottom if new item added
@@ -72,7 +66,10 @@ const EditList = (props) => {
   // Add item to list
   const addItem = e => {
     e.preventDefault();
-    setItems([...items, { id: uuid(), content: inputContent }]);
+    dispatch({
+      type: 'updateItems',
+      items: [...items, { id: uuid(), content: inputContent }]
+    });
     setInputContent('');
     setWasItemAdded(true);
   };
@@ -85,17 +82,22 @@ const EditList = (props) => {
   // Delete item
   const deleteItem = id => {
     const itemList = items.filter(item => item.id !== id);
-    setItems(itemList);
+    dispatch({
+      type: 'updateItems',
+      items: itemList
+    });
     setWasItemAdded(false);
   };
 
   return (
     <div className='container-edit'>
-      <h1 className='h1'>{listName}</h1>
-      <InputForm
-        addItem={addItem}
-        handleChange={handleChange}
-        inputContent={inputContent} />
+      <div className="container-edit__header">
+        <h1 className='h1'>{listName}</h1>
+        <InputForm
+          addItem={addItem}
+          handleChange={handleChange}
+          inputContent={inputContent} />
+      </div>
       <ul id='ul'>
         {items.map((item) => <Item key={item.id} item={item} deleteItem={() => deleteItem(item.id)} />)}
       </ul>

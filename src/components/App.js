@@ -6,6 +6,7 @@ import Loading from './Loading';
 import useRouter from '../hooks/useRouter';
 import Header from '../components/Header';
 import EditTools from '../components/EditTools';
+import useEditTools from '../hooks/useEditTools';
 import { StateProvider } from '../hooks/stateManager';
 import '../styles/App.scss';
 
@@ -22,22 +23,37 @@ const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'))
 const App = () => {
   // initialize state
   const initialState = {
-    currentList: 'none'
+    list: '',
+    name: '',
+    items: []
   };
   // create reducer
   const reducer = (state, action) => {
     switch (action.type) {
-      case 'changeList':
+      case 'updateList':
         return {
           ...state,
-          currentList: action.newList
+          list: action.list
         };
+      case 'updateName':
+        return {
+          ...state,
+          name: action.name
+        };
+      case 'updateItems':
+        return {
+          ...state,
+          items: action.items
+        };
+      default:
+        return state;
     }
   };
   // Store location history
   const { location } = useRouter();
   // Regex to detect edit route
   const reEditRoute = /edit$/;
+
   // Create route page animations
   const transitions = useTransition(location, location => location.pathname, {
     from: { transform: 'translate3d(-100%, 0, 0)' },
