@@ -15,21 +15,26 @@ const idbPromise = openDB('easylist', 1, {
 const addListPromise = async (list) => (await idbPromise).add('lists', list);
 
 /**
- * Returns a promise that deletes a list from indexedDB
- * @param {string} list - The list to be deleted
+ * Returns a promise that gets a list from indexedDB
+ * @param {string} list - The name of list to get
  */
-const deleteListPromise = async (list) => (await idbPromise).delete('lists', list);
+const getListPromise = async (name) => (await idbPromise).get('lists', name);
+
+/**
+ * Returns a promise that deletes a list from indexedDB
+ * @param {string} name - The name of list to be deleted
+ */
+const deleteListPromise = async (name) => (await idbPromise).delete('lists', name);
 
 /**
  * Returns a promise that updates a list in indexedDB
  * @param {string} list - The list to be updated
  */
-const updateListPromise = async (list) => {
-  (await idbPromise).put('lists', list);
-};
+const updateListPromise = async (list) => (await idbPromise).put('lists', list);
 
 export {
   addListPromise,
+  getListPromise,
   deleteListPromise,
   updateListPromise
 };

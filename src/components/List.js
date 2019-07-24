@@ -1,27 +1,59 @@
 import React, { useEffect } from 'react';
+import Popup from './Popup';
+import usePopup from '../hooks/usePopup';
 
 const List = (props) => {
-  // destruct to get listName from React Router's state history
-  const { listName } = props.history.location.state || { listName };
+  // get state from location
+  const { state } = props.location;
+
+  // set title
   useEffect(() => {
-    document.title = listName;
-  });
+    document.title = state.name;
+  }, [state.name]);
+
+  // Get/set state of popup
+  const { isShowingPopup, togglePopup, message } = usePopup();
+
   // Function to delete a list
   const deleteList = async () => {
     try {
+      // lazy load
       const { deleteListPromise } = await import(/* webpackChunkName: "deleteListPromise" */'../helpers/dbhelper');
-      //TODO: get id of list to delete
-      const id = 0;
-      deleteListPromise(id);
+      // delete list
+      await deleteListPromise(state.name);
+      // redirect to lists page
+      props.history.push('/lists');
     } catch (error) {
       throw new Error(error);
     }
   };
 
+  // Function to share a list
+  const shareList = () => {
+    // TODO: create url where list can be viewed publicly and copy link to clipboard
+    // Display popup msg
+    const msg = 'Your list can be viewed at: \n\nhttps://easylist.link/list/1q2w3e4r5t6y7u8i9o0p \nThe link has been copied to your clipboard.';
+    return togglePopup(msg);
+  };
+
+  // Function to edit a list
+  const editList = () => {
+    // redirect to editList
+    props.history.push(`/lists/${encodeURIComponent(state.name)}/edit`, { listName: state.name });
+  };
+
+
   return (
     <div className='container'>
-      <h1 className='h1'>{listName}</h1>
+      <Popup
+        isShowing={isShowingPopup}
+        text={message}
+        hide={togglePopup}>
+      </Popup>
+      <h1 className='h1'>{name}</h1>
       <button onClick={deleteList}>delete</button>
+      <button onClick={shareList}>share</button>
+      <button onClick={editList}>edit</button>
     </div>
   );
 };

@@ -6,7 +6,6 @@ import Loading from './Loading';
 import useRouter from '../hooks/useRouter';
 import Header from '../components/Header';
 import EditTools from '../components/EditTools';
-import useEditTools from '../hooks/useEditTools';
 import { StateProvider } from '../hooks/stateManager';
 import '../styles/App.scss';
 
@@ -17,6 +16,7 @@ const CreateList = lazy(() => import(/* webpackChunkName: "CreateList" */'./Crea
 const ViewLists = lazy(() => import(/* webpackChunkName: "ViewLists" */'./ViewLists'));
 const Donate = lazy(() => import(/* webpackChunkName: "Donate" */'./Donate'));
 const EditList = lazy(() => import(/* webpackChunkName: "EditList" */'./EditList'));
+const List = lazy(() => import(/* webpackChunkName: "List" */'./List'));
 const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'));
 
 
@@ -65,8 +65,7 @@ const App = () => {
   return (
     <StateProvider initialState={initialState} reducer={reducer}>
       <div>
-        <Header
-          path={location.pathname} />
+        <Header />
         {transitions.map(({ item, props, key }) => (
           <animated.div
             key={key}
@@ -79,6 +78,7 @@ const App = () => {
                 <Route exact path="/lists" component={ViewLists} />
                 <Route path="/donate" component={Donate} />
                 <Route path="/lists/:name/edit" component={EditList} />
+                <Route path="/lists/:name" component={List} />
                 {/* when none of the above match, <NoMatch> will be rendered */}
                 <Route component={NoMatch} />
               </Switch>

@@ -4,6 +4,11 @@
   height: 200px;
   top: calc(30% - 100px);
   left: calc(50% - 100px);
+  p {
+    width: 100%;
+    word-break: break-word;
+    text-align: center;
+  }
 }
 .popup__inner {
   width: 200px;

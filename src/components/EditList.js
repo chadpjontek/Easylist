@@ -36,6 +36,7 @@ const EditList = (props) => {
   // destruct to get listName from React Router's state history
   const { listName } = props.history.location.state || { listName };
   const [{ items }, dispatch] = useStateValue();
+  //TODO: fetch data from IDB on first load
   useEffect(() => {
     document.title = 'Edit list';
     dispatch({

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Header(props) {
+export default function Header() {
   // Get/set state of nav
   const [isNavOpen, setIsNavOpen] = useState(false);
   // Open nav

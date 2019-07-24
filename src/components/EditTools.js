@@ -8,17 +8,20 @@ import ol from '../images/ol.svg';
 import underline from '../images/underline.svg';
 import save from '../images/save-icon.svg';
 import { useStateValue } from '../hooks/stateManager';
+import useRouter from '../hooks/useRouter';
 import '../styles/EditList.scss';
 
 const EditTools = (props) => {
+  // Store location history
+  const { history } = useRouter();
   const [{ name, items }] = useStateValue();
   const saveList = async () => {
     try {
-      const list = { name, items };
+      // Update the list in IDB
       const { updateListPromise } = await import(/* webpackChunkName: "updateListPromise" */'../helpers/dbhelper');
-      await updateListPromise(list);
-      //TODO: redirect to list page
-
+      await updateListPromise({ name, items });
+      // Redirect to list page
+      history.push(`/lists/${name}`, { name });
     } catch (error) {
       throw new Error(error);
     }
