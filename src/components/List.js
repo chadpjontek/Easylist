@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
+import '../styles/List.scss';
 
 const List = (props) => {
   // get state from location
@@ -44,16 +45,16 @@ const List = (props) => {
 
 
   return (
-    <div className='container'>
+    <div className='container-list'>
       <Popup
         isShowing={isShowingPopup}
         text={message}
         hide={togglePopup}>
       </Popup>
       <h1 className='h1'>{state.name}</h1>
-      <button onClick={deleteList}>delete</button>
-      <button onClick={shareList}>share</button>
-      <button onClick={editList}>edit</button>
+      <button className='btn btn--edit' onClick={editList}>edit</button>
+      <button className='btn btn--share' onClick={shareList}>share</button>
+      <button className='btn btn--delete' onClick={deleteList}>delete</button>
     </div>
   );
 };
