@@ -50,7 +50,7 @@ const List = (props) => {
         text={message}
         hide={togglePopup}>
       </Popup>
-      <h1 className='h1'>{name}</h1>
+      <h1 className='h1'>{state.name}</h1>
       <button onClick={deleteList}>delete</button>
       <button onClick={shareList}>share</button>
       <button onClick={editList}>edit</button>
