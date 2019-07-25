@@ -21,6 +21,11 @@ const addListPromise = async (list) => (await idbPromise).add('lists', list);
 const getListPromise = async (name) => (await idbPromise).get('lists', name);
 
 /**
+ * Returns a promise that gets all lists from indexedDB
+ */
+const getListsPromise = async () => (await idbPromise).getAll('lists');
+
+/**
  * Returns a promise that deletes a list from indexedDB
  * @param {string} name - The name of list to be deleted
  */
@@ -35,6 +40,7 @@ const updateListPromise = async (list) => (await idbPromise).put('lists', list);
 export {
   addListPromise,
   getListPromise,
+  getListsPromise,
   deleteListPromise,
   updateListPromise
 };

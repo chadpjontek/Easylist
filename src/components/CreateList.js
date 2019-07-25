@@ -14,7 +14,7 @@ const CreateList = (props) => {
   useEffect(() => {
     document.title = 'Create a list';
   });
-  const [dispatch] = useStateValue();
+  const [, dispatch] = useStateValue();
   /**
    * Function to create a new list
    */
