@@ -1,16 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
+import { getListPromise } from '../helpers/dbhelper';
 import '../styles/List.scss';
 
 const List = (props) => {
   // get state from location
-  const { state } = props.location;
+  const { state } = props.location || 'list';
 
-  // set title
+  // local state
+  const [items, setItems] = useState([]);
+
+  // on first load...
   useEffect(() => {
+    // ...update title
     document.title = state.name;
-  }, [state.name]);
+    // ...fetch list items
+    const fetchData = async () => {
+      try {
+        const results = await getListPromise(state.name);
+        setItems(results.items);
+      } catch (error) {
+        throw new Error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -51,10 +66,19 @@ const List = (props) => {
         text={message}
         hide={togglePopup}>
       </Popup>
-      <h1 className='h1'>{state.name}</h1>
-      <button className='btn btn--edit' onClick={editList}>edit</button>
-      <button className='btn btn--share' onClick={shareList}>share</button>
-      <button className='btn btn--delete' onClick={deleteList}>delete</button>
+      <div className="list-header">
+        <h1 className='h1'>{state.name}</h1>
+        <button className='btn btn--edit' onClick={editList}>edit</button>
+        <button className='btn btn--share' onClick={shareList}>share</button>
+        <button className='btn btn--delete' onClick={deleteList}>delete</button>
+      </div>
+      <ul className='items'>
+        {items.map((item, i) => <li
+          key={i}
+          className='item'>
+          {item.content}
+        </li>)}
+      </ul>
     </div>
   );
 };

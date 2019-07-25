@@ -5,41 +5,66 @@
   max-width: 1024px;
   margin: 0 auto;
   will-change: transform;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr, 1fr, auto;
-  grid-column-gap: 5px;
-  .h1 {
+  .list-header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr, 1fr, auto;
+    grid-column-gap: 5px;
+    background: white;
+    h1 {
+      font-size: 20px;
+      grid-column: 1 / 4;
+      grid-row: 1 / 2;
+    }
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      font-family: 'Walter Turncoat', sans-serif;
+      font-weight: 400;
+      width: 100%;
+      grid-row: 2 / 3;
+      color: black;
+    }
+    .btn--edit{
+      background: #E0EFFA;
+      &:hover, &:focus {
+        box-shadow: 0 3px 4px 1px hsla(205, 36%, 65%, 0.7);
+      }
+    }
+    .btn--share{
+      background: #F8E9FC;
+      &:hover, &:focus {
+        box-shadow: 0 3px 4px 1px hsla(287, 36%, 47%, 0.7);
+      }
+    }
+    .btn--delete{
+      background: #FDE2E2;
+      &:hover, &:focus {
+        box-shadow: 0 3px 4px 1px hsla(0, 37%, 47%, 0.7);
+      }
+    }
+  }
+  .items {
     font-size: 20px;
+    font-family: 'Raleway', sans-serif;
+    list-style: none outside none;
+    margin: 10px 0 0 0;
+    padding: 0;
     grid-column: 1 / 4;
-    grid-row: 1 / 2;
-
-  }
-  .btn {
-    display: inline-flex;
-    justify-content: center;
-    font-family: 'Walter Turncoat', sans-serif;
-    font-weight: 400;
-    width: 100%;
-    grid-row: 2 / 3;
-    color: black;
-  }
-  .btn--edit{
-    background: #E0EFFA;
-    &:hover, &:focus {
-      box-shadow: 0 3px 4px 1px hsla(205, 36%, 65%, 0.7);
+    .item {
+      border-bottom: 1px solid #3F88C5;
+      margin: 0 0;
+      padding: 20px 35px 0px 40px;
+      line-height: 14px;
     }
-  }
-  .btn--share{
-    background: #F8E9FC;
-    &:hover, &:focus {
-      box-shadow: 0 3px 4px 1px hsla(287, 36%, 47%, 0.7);
-    }
-  }
-  .btn--delete{
-    background: #FDE2E2;
-    &:hover, &:focus {
-      box-shadow: 0 3px 4px 1px hsla(0, 37%, 47%, 0.7);
+    .item:before {
+      content: "";
+      border-right: 1px solid red;
+      position: absolute;
+      height: 100%;
+      top: 0;
+      margin-left: -3px;
+      z-index: -5;
     }
   }
 }
