@@ -1,0 +1,36 @@
+.container-view-lists {
+  position: absolute;
+  top: 46px;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  will-change: transform;
+  .h1 {
+    font-size: 20px;
+  }
+  .lists {
+    font-size: 20px;
+    font-family: 'Raleway', sans-serif;
+    list-style: none outside none;
+    margin: 10px 0 0 0;
+    padding: 0;
+    .list {
+      border-bottom: 1px solid #3F88C5;
+      margin: 0 0;
+      padding: 20px 35px 0px 40px;
+      line-height: 14px;
+      &:hover, &:active{
+        background-color: #F3FEA8;
+      }
+    }
+    .list:before {
+      content: "";
+      border-right: 1px solid red;
+      position: absolute;
+      height: 100%;
+      top: 0;
+      margin-left: -3px;
+      z-index: -5;
+    }
+  }
+}

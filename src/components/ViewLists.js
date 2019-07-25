@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getListsPromise } from '../helpers/dbhelper';
+import '../styles/ViewLists.scss';
 
 const ViewLists = (props) => {
   const [lists, setLists] = useState([]);
@@ -25,10 +26,15 @@ const ViewLists = (props) => {
 
 
   return (
-    <div className='container'>
-      <h1 className='h1'>View lists page</h1>
-      <ul>
-        {lists.map((list, i) => <li key={i} onClick={handleClick}>{list.name}</li>)}
+    <div className='container-view-lists'>
+      <h1 className='h1'>Your lists:</h1>
+      <ul className='lists'>
+        {lists.map((list, i) => <li
+          key={i}
+          onClick={handleClick}
+          className='list'>
+          {list.name}
+        </li>)}
       </ul>
     </div>
   );
