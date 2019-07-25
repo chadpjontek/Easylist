@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import uuid from 'uuid/v1';
 import { useStateValue } from '../hooks/stateManager';
+import { getListPromise } from '../helpers/dbhelper';
 import del from '../images/delete.svg';
 
 // The input form
@@ -35,26 +36,38 @@ const Item = (props) => {
 const EditList = (props) => {
   // destruct to get listName from React Router's state history
   const { listName } = props.history.location.state || { listName };
+
+  // global state getter/setter
   const [{ items }, dispatch] = useStateValue();
-  //TODO: fetch data from IDB on first load
+
+  // local state
+  const [inputContent, setInputContent] = useState('');
+  const [wasItemAdded, setWasItemAdded] = useState(false);
+
+  // on first load...
   useEffect(() => {
+    // ...update title
     document.title = 'Edit list';
+    // ...update list name state
     dispatch({
       type: 'updateName',
       name: listName
     });
-  }, [listName]);
-
-  // state
-  // const [isOrderedList, setIsOrderedList] = useState(false);
-  // const [isCheckbox, setIsCheckbox] = useState(false);
-  // const [isShowingMore, setIsShowingMore] = useState(false);
-  // const [isBold, setIsBold] = useState(false);
-  // const [isItalic, setIsItalic] = useState(false);
-  // const [isUnderlined, setIsUnderlined] = useState(false);
-  // const [isShowingForm, setIsShowingForm] = useState(false);
-  const [inputContent, setInputContent] = useState('');
-  const [wasItemAdded, setWasItemAdded] = useState(false);
+    // ...fetch item data from IDB
+    const fetchData = async () => {
+      try {
+        const result = await getListPromise(listName);
+        // ...update list item state
+        dispatch({
+          type: 'updateItems',
+          items: result.items
+        });
+      } catch (error) {
+        throw new Error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   // scroll to bottom if new item added
   useEffect(() => {
