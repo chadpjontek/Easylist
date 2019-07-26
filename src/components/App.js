@@ -23,18 +23,17 @@ const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'))
 const App = () => {
   // initialize state
   const initialState = {
-    list: '',
     name: '',
-    items: []
+    items: [],
+    isOl: false,
+    isCBox: false,
+    isBOld: false,
+    isItalic: false,
+    isUnderlined: false,
   };
   // create reducer
   const reducer = (state, action) => {
     switch (action.type) {
-      case 'updateList':
-        return {
-          ...state,
-          list: action.list
-        };
       case 'updateName':
         return {
           ...state,
@@ -44,6 +43,31 @@ const App = () => {
         return {
           ...state,
           items: action.items
+        };
+      case 'toggleOl':
+        return {
+          ...state,
+          isOl: action.isOl
+        };
+      case 'toggleCBox':
+        return {
+          ...state,
+          isCBox: action.isCBox
+        };
+      case 'toggleBold':
+        return {
+          ...state,
+          isBold: action.isBold
+        };
+      case 'toggleItalic':
+        return {
+          ...state,
+          isItalic: action.isItalic
+        };
+      case 'toggleUnderline':
+        return {
+          ...state,
+          isUnderlined: action.isUnderlined
         };
       default:
         return state;

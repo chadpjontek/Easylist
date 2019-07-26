@@ -14,7 +14,76 @@ import '../styles/EditList.scss';
 const EditTools = (props) => {
   // Store location history
   const { history } = useRouter();
-  const [{ name, items }] = useStateValue();
+  const [{ name, items, isOl, isCBox, isBold, isItalic, isUnderlined }, dispatch] = useStateValue();
+
+  /**
+   * Toggles if list is ordered
+   */
+  const toggleOl = () => {
+    dispatch({
+      type: 'toggleOl',
+      isOl: !isOl
+    });
+  };
+
+  /**
+   * Toggles checkbox
+   */
+  const toggleCBox = () => {
+    dispatch({
+      type: 'toggleCBox',
+      isCBox: !isCBox
+    });
+  };
+
+  /**
+   * Toggles bold
+   */
+  const toggleBold = () => {
+    dispatch({
+      type: 'toggleBold',
+      isBold: !isBold
+    });
+  };
+
+  /**
+   * Toggles italics
+   */
+  const toggleItalic = () => {
+    dispatch({
+      type: 'toggleItalic',
+      isItalic: !isItalic
+    });
+  };
+
+  /**
+   * Toggles underline
+   */
+  const toggleUnderline = () => {
+    dispatch({
+      type: 'toggleUnderline',
+      isUnderlined: !isUnderlined
+    });
+  };
+
+  /**
+   * Open dialog to link to another list
+   */
+  const linkToList = () => {
+    //TODO: select list to link to and add to item with a highlight
+  };
+
+  /**
+   * Toggles notification
+   */
+  const toggleNotify = () => {
+    //TODO: put bell on item
+  };
+
+
+  /**
+   * Saves list to IDB before redirecting to List page
+   */
   const saveList = async () => {
     try {
       // Update the list in IDB
@@ -31,35 +100,35 @@ const EditTools = (props) => {
     <div className="edit">
       <div className='row'>
         <div className="column">
-          <button className='btn-edit'><img src={ol} alt="toggle ordered list" /></button>
+          <button className={isOl ? 'btn-edit selected' : 'btn-edit'} onClick={toggleOl}><img src={ol} alt="toggle ordered list" /></button>
         </div>
         <div className="column">
-          <button className='btn-edit'>
+          <button className={isCBox ? 'btn-edit selected' : 'btn-edit'} onClick={toggleCBox}>
             <img src={editCheck} alt="toggle checkboxes" />
           </button>
         </div>
         <div className="column">
-          <button className='btn-edit'>
+          <button className={isBold ? 'btn-edit selected' : 'btn-edit'} onClick={toggleBold}>
             <img src={bold} alt="toggle bold" />
           </button>
         </div>
         <div className="column">
-          <button className='btn-edit'>
+          <button className={isItalic ? 'btn-edit selected' : 'btn-edit'} onClick={toggleItalic}>
             <img src={italic} alt="toggle italic" />
           </button>
         </div>
         <div className="column">
-          <button className='btn-edit'>
+          <button className={isUnderlined ? 'btn-edit selected' : 'btn-edit'} onClick={toggleUnderline}>
             <img src={underline} alt="toggle underline" />
           </button>
         </div>
         <div className="column">
-          <button className='btn-edit highlight'>
+          <button className='btn-edit highlight' onClick={linkToList}>
             <img src={nestedList} alt="link to other list" />
           </button>
         </div>
         <div className="column">
-          <button className='btn-edit highlight'>
+          <button className='btn-edit highlight' onClick={toggleNotify}>
             <img src={notify} alt="toggle notification" />
           </button>
         </div>
