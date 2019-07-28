@@ -5,8 +5,8 @@ import { getListPromise } from '../helpers/dbhelper';
 import '../styles/List.scss';
 
 const List = (props) => {
-  // get state from location
-  const { state } = props.location || 'list';
+  // get listName from location
+  const listName = decodeURI(window.location.pathname.split('/')[2]);
 
   // local state
   const [items, setItems] = useState([]);
@@ -14,11 +14,11 @@ const List = (props) => {
   // on first load...
   useEffect(() => {
     // ...update title
-    document.title = state.name;
+    document.title = listName;
     // ...fetch list items
     const fetchData = async () => {
       try {
-        const results = await getListPromise(state.name);
+        const results = await getListPromise(listName);
         setItems(results.items);
       } catch (error) {
         throw new Error(error);
@@ -36,7 +36,7 @@ const List = (props) => {
       // lazy load
       const { deleteListPromise } = await import(/* webpackChunkName: "deleteListPromise" */'../helpers/dbhelper');
       // delete list
-      await deleteListPromise(state.name);
+      await deleteListPromise(listName);
       // redirect to lists page
       props.history.push('/lists');
     } catch (error) {
@@ -55,7 +55,7 @@ const List = (props) => {
   // Function to edit a list
   const editList = () => {
     // redirect to editList
-    props.history.push(`/lists/${encodeURIComponent(state.name)}/edit`, { listName: state.name });
+    props.history.push(`/lists/${encodeURIComponent(listName)}/edit`, { listName: listName });
   };
 
 
@@ -67,7 +67,7 @@ const List = (props) => {
         hide={togglePopup}>
       </Popup>
       <div className="list-header">
-        <h1 className='h1'>{state.name}</h1>
+        <h1 className='h1'>{listName}</h1>
         <button className='btn btn--edit' onClick={editList}>edit</button>
         <button className='btn btn--share' onClick={shareList}>share</button>
         <button className='btn btn--delete' onClick={deleteList}>delete</button>
