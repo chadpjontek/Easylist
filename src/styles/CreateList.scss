@@ -20,3 +20,23 @@
   height: 25px;
   border: none;
 }
+
+.btn--create {
+  display: block;
+  margin: 0 auto;
+  width: 127px;
+  height: 47px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: white;
+  background-color: #3F88C5;
+  border: none;
+}
+
+
+@media(hover: hover) and (pointer: fine) {
+  .btn--create:hover {
+    box-shadow: 0 3px 4px 1px hsla(207, 25%, 30%, 1);
+  }
+}

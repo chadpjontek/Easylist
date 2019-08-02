@@ -5,7 +5,6 @@ import { useTransition, animated } from 'react-spring';
 import Loading from './Loading';
 import useRouter from '../hooks/useRouter';
 import Header from '../components/Header';
-import EditTools from '../components/EditTools';
 import { StateProvider } from '../hooks/stateManager';
 import '../styles/App.scss';
 
@@ -21,15 +20,10 @@ const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'))
 
 
 const App = () => {
+
+  // TODO: update app state/reducer if global state is necessary
   // initialize state
   const initialState = {
-    name: '',
-    items: [],
-    isOl: false,
-    isCBox: false,
-    isBOld: false,
-    isItalic: false,
-    isUnderlined: false,
   };
   // create reducer
   const reducer = (state, action) => {
@@ -39,36 +33,7 @@ const App = () => {
           ...state,
           name: action.name
         };
-      case 'updateItems':
-        return {
-          ...state,
-          items: action.items
-        };
-      case 'toggleOl':
-        return {
-          ...state,
-          isOl: action.isOl
-        };
-      case 'toggleCBox':
-        return {
-          ...state,
-          isCBox: action.isCBox
-        };
-      case 'toggleBold':
-        return {
-          ...state,
-          isBold: action.isBold
-        };
-      case 'toggleItalic':
-        return {
-          ...state,
-          isItalic: action.isItalic
-        };
-      case 'toggleUnderline':
-        return {
-          ...state,
-          isUnderlined: action.isUnderlined
-        };
+
       default:
         return state;
     }
@@ -109,7 +74,6 @@ const App = () => {
             </Suspense>
           </animated.div>
         ))}
-        {reEditRoute.test(location.pathname) ? <EditTools /> : null}
       </div>
     </StateProvider>
   );

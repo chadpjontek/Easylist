@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { getListsPromise } from '../helpers/dbhelper';
 import '../styles/ViewLists.scss';
 
+
 const ViewLists = (props) => {
-  const [lists, setLists] = useState([]);
+  // local state getters/setters
+  const [lists, setLists] = useState(null);
+
+
+  // on first load...
   useEffect(() => {
+    // ... change title
     document.title = 'View lists';
+    // ... fetch list data
     const fetchData = async () => {
       try {
         const results = await getListsPromise();
@@ -24,19 +31,19 @@ const ViewLists = (props) => {
     props.history.push(`/lists/${name}`, { name });
   };
 
-
   return (
     <div className='container-view-lists'>
       <h1 className='h1'>Your lists:</h1>
-      <ul className='lists'>
-        {lists.map((list, i) => <li
+      <div className='lists'>
+        {lists ? lists.map((list, i) => <div
+          style={{ backgroundColor: list.backgroundColor, transform: `rotate(${Math.floor(Math.random() * (10 - -10) + -10)}deg)` }}
           key={i}
           onClick={handleClick}
           className='list'>
           {list.name}
-        </li>)}
-      </ul>
-    </div>
+        </div>) : null}
+      </div>
+    </div >
   );
 };
 

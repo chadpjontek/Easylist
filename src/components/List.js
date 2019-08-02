@@ -5,21 +5,23 @@ import { getListPromise } from '../helpers/dbhelper';
 import '../styles/List.scss';
 
 const List = (props) => {
-  // get listName from location
-  const listName = decodeURI(window.location.pathname.split('/')[2]);
+  // get name from location
+  const name = decodeURI(window.location.pathname.split('/')[2]);
 
-  // local state
-  const [items, setItems] = useState([]);
+  // local state getters/setters
+  const [html, setHtml] = useState('');
+  const [backgroundColor, setBackgroundColor] = useState('');
 
   // on first load...
   useEffect(() => {
     // ...update title
-    document.title = listName;
-    // ...fetch list items
+    document.title = name;
+    // ...fetch list
     const fetchData = async () => {
       try {
-        const results = await getListPromise(listName);
-        setItems(results.items);
+        const { html, backgroundColor } = await getListPromise(name);
+        setHtml(html);
+        setBackgroundColor(backgroundColor);
       } catch (error) {
         throw new Error(error);
       }
@@ -36,7 +38,7 @@ const List = (props) => {
       // lazy load
       const { deleteListPromise } = await import(/* webpackChunkName: "deleteListPromise" */'../helpers/dbhelper');
       // delete list
-      await deleteListPromise(listName);
+      await deleteListPromise(name);
       // redirect to lists page
       props.history.push('/lists');
     } catch (error) {
@@ -55,7 +57,7 @@ const List = (props) => {
   // Function to edit a list
   const editList = () => {
     // redirect to editList
-    props.history.push(`/lists/${encodeURIComponent(listName)}/edit`, { listName: listName });
+    props.history.push(`/lists/${encodeURIComponent(name)}/edit`, { name });
   };
 
 
@@ -67,19 +69,13 @@ const List = (props) => {
         hide={togglePopup}>
       </Popup>
       <div className="list-header">
-        <h1 className='h1'>{listName}</h1>
-        <button className='btn btn--edit' onClick={editList}>edit</button>
-        <button className='btn btn--share' onClick={shareList}>share</button>
-        <button className='btn btn--delete' onClick={deleteList}>delete</button>
+        <h1 className='h1'>{name}</h1>
+        <button className='btn btn--list btn--edit' onClick={editList}>edit</button>
+        <button className='btn btn--list btn--share' onClick={shareList}>share</button>
+        <button className='btn btn--list btn--delete' onClick={deleteList}>delete</button>
       </div>
-      <ul className='items'>
-        {items.map((item, i) => <li
-          key={i}
-          className='item'>
-          {item.content}
-        </li>)}
-      </ul>
-    </div>
+      <div className="editbox" style={{ backgroundColor }} dangerouslySetInnerHTML={{ __html: html }}></div>
+    </div >
   );
 };
 

@@ -2,19 +2,20 @@ import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
 import { cleanInput, validateListName } from '../helpers';
-import { useStateValue } from '../hooks/stateManager';
 import '../styles/CreateList.scss';
 
 const CreateList = (props) => {
   // Get/set state of text input
   const [inputValue, setInputValue] = useState('');
+
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
+
   // Set title on page render
   useEffect(() => {
     document.title = 'Create a list';
   });
-  const [, dispatch] = useStateValue();
+
   /**
    * Function to create a new list
    */
@@ -26,20 +27,14 @@ const CreateList = (props) => {
       const msg = 'Name must be between 3 and 24 characters and not start with a space.';
       return togglePopup(msg);
     }
-    const listName = cleanInput(inputValue);
-
-    // clear any previous item state
-    dispatch({
-      type: 'updateItems',
-      items: []
-    });
+    const name = cleanInput(inputValue);
 
     // Try to add list to indexedDB and redirect to edit page
     try {
       const { addListPromise } = await import(/* webpackChunkName: "addListPromise" */'../helpers/dbhelper');
-      const list = { name: listName, items: [] };
+      const list = { name, html: '<ul><li><br></li></ul>', backgroundColor: '#E0EFFA' };
       await addListPromise(list);
-      props.history.push(`/lists/${encodeURIComponent(listName)}/edit`, { listName });
+      props.history.push(`/lists/${encodeURIComponent(name)}/edit`, { name });
     } catch (error) {
       const msg = 'Couldn\'t add list. List names must be unique.';
       togglePopup(msg);

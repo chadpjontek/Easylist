@@ -1,36 +1,41 @@
 .container-view-lists {
-  position: absolute;
-  top: 46px;
   width: 100%;
   max-width: 1024px;
-  margin: 0 auto;
+  margin: 48px auto 0;
   will-change: transform;
-  .h1 {
-    font-size: 20px;
-  }
-  .lists {
-    font-size: 20px;
-    font-family: 'Raleway', sans-serif;
-    list-style: none outside none;
-    margin: 10px 0 0 0;
-    padding: 0;
-    .list {
-      border-bottom: 1px solid #3F88C5;
-      margin: 0 0;
-      padding: 20px 35px 0px 40px;
-      line-height: 14px;
-      &:hover, &:active{
-        background-color: #F3FEA8;
-      }
-    }
-    .list:before {
-      content: "";
-      border-right: 1px solid red;
-      position: absolute;
-      height: 100%;
-      top: 0;
-      margin-left: -3px;
-      z-index: -5;
-    }
+  background: url(../images/paper.svg);
+  background-repeat: repeat-y;
+  background-position: top;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.h1 {
+  font-size: 20px;
+}
+
+.lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-auto-rows: 140px;
+  grid-gap: 15px;
+  font-size: 20px;
+  font-family: 'Walter Turncoat', sans-serif;
+  margin: 0 10px;
+  padding: 0;
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.list {
+  margin: 0;
+  padding: 10px;
+}
+
+
+@media(hover: hover) and (pointer: fine) {
+  .list:hover {
+
   }
 }

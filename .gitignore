@@ -2,3 +2,4 @@
 /dist
 .netlify
 package-lock.json
+.vscode

@@ -91,30 +91,39 @@ nav {
 
 .h1 {
   margin: 0;
-  padding: 10px;
+  padding: 10px 0 5px;
   font-family: 'Raleway', sans-serif;
   text-align: center;
 }
 
 .btn {
-  display: block;
-  margin: 0 auto 6px;
-  width: 127px;
-  height: 47px;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  color: white;
-  background-color: $primary-color;
+  width: 100%;
   border: none;
+  padding: 0;
+  margin: 0;
+  background: lightgray;
   transition: all .2s;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  transition: box-shadow 0.2s ease-out, background-color 0.2s ease-out, transform 0.2s ease-out;
 
-  &:hover, &:focus {
-    box-shadow: 0 3px 4px 1px #000;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 0;
+    padding-top: 0;
+    border-radius: 100%;
+    background-color: rgba(236, 240, 241, .7);
+    transform: translate(-50%, -50%);
   }
-
-  &:active {
-    background-color: #2b6391;
+  &:active:before {
+    width: 120%;
+    padding-top: 120%;
+    transition: width 0.2s ease-out, padding-top 0.2s ease-out;
   }
 }
 
@@ -392,7 +401,7 @@ nav {
       height: 3px;
       background: white;
       margin: 5px;
-      transition: .25s ease-in-out;
+      transition: transform 0.25s ease-in-out;
     }
     .open:nth-child(1) {
       transform: rotate(45deg) translate(4px, 6px);
@@ -413,7 +422,7 @@ nav {
     flex-direction: column;
     justify-content: space-evenly;
     align-items: flex-end;
-    transition: all 0.6s ease;
+    transition: all 0.6s;
   }
   .nav-links.open {
     clip-path: inset(0 0 0 50%);
