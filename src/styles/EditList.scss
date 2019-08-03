@@ -1,6 +1,4 @@
-$width: 80%;
-$unselected-color: #9e9e9e;
-$selected-color: #3F88C5;
+@import 'variables';
 
 .container-edit {
   width: 100%;
@@ -12,18 +10,12 @@ $selected-color: #3F88C5;
   background-position: top;
   background-size: cover;
   min-height: 100vh;
-  .container-edit__header {
-    margin: 48px auto 0;
-    position: sticky;
-    top: 48px;
-    h1 {
-      font-size: 20px;
-    }
-  }
+
   form {
+
     label {
       font-family: 'Walter Turncoat', sans-serif;
-      color:$unselected-color;
+      color: #9e9e9e;
       font-size:18px;
       position:absolute;
       pointer-events:none;
@@ -31,50 +23,41 @@ $selected-color: #3F88C5;
       top: 148px;
       transition: 0.5s ease all;
     }
+
     input[type=text] {
       font-family: "Raleway", sans-serif;
       font-size: 20px;
       margin: 10px;
-      width: $width;
-      border: 1px solid $unselected-color;
+      width: 80%;
+      border: 1px solid #9e9e9e;
       border-radius: 4px;
+
       &:focus{
         outline: none;
-        border-color: $selected-color;
+        border-color: $primary-color;
       }
+
       &:focus ~ label,
       &:valid ~ label {
         top: 133px;
         left: 14px;
         background-color: white;
         font-size: 14px;
-        color: $selected-color;
+        color: $primary-color;
       }
     }
   }
 }
 
-.editbox{
-  width: 90vw;
-  max-width: 900px;
-  margin: 10px auto 0;
-  padding: 15px;
-  font-family: 'Walter Turncoat', sans-serif;
-  font-size: 18px;
-  color: black;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
-  height: 74vh;
-  overflow-y: scroll;
-  transition: background-color 0.5s;
+.container-edit__header {
+  margin: 48px auto 0;
+  position: sticky;
+  top: 48px;
+  background-color: white;
 
-  ul, ol {
-    list-style-position: inside;
-    margin: 0;
-    padding: 0;
+  h1 {
+    font-size: 20px;
   }
-  &::-webkit-scrollbar { width: 0 !important }
 }
 
 .edit {
@@ -94,6 +77,7 @@ $selected-color: #3F88C5;
 }
 
 .column {
+
   img {
     width: 100%;
     vertical-align: middle;
@@ -112,7 +96,7 @@ $selected-color: #3F88C5;
   border: none;
   padding: 0;
   margin: 0;
-  background-color: lightgray;
+  background-color: $muted-color;
   transition: all .2s;
   position: relative;
   overflow: hidden;
@@ -121,7 +105,7 @@ $selected-color: #3F88C5;
 }
 
 .success {
-  background: #C7F6D4;
+  background: $green;
 }
 
 .selected {
@@ -129,26 +113,21 @@ $selected-color: #3F88C5;
 }
 
 .highlight {
-  background: #f3fea8;
+  background: $yellow;
 }
 
 .alert {
-  background: #FDE2E2;
+  background: $red;
 }
 
 .primary {
-  background: #E0EFFA;
+  background: $blue;
 }
 
-/*=== media queries ===*/
-/* Less than 540 tall*/
-@media screen and (max-height: 540px) {
-  .editbox {
-    height: 44vh;
-  }
-}
 
+// media queries
 @media(hover: hover) and (pointer: fine) {
+
   .btn-edit:hover {
     box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.3);
   }

@@ -1,3 +1,5 @@
+@import 'variables';
+
 .container-list {
   width: 100%;
   max-width: 1024px;
@@ -8,43 +10,53 @@
   background-position: top;
   background-size: cover;
   min-height: 100vh;
-  .list-header {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr, 1fr, auto;
-    grid-column-gap: 5px;
-    margin: 48px 15px 5px;
-    h1 {
-      font-size: 20px;
-      grid-column: 1 / 4;
-      grid-row: 1 / 2;
-    }
-    .btn--list {
-      display: inline-flex;
-      justify-content: center;
-      font-family: 'Walter Turncoat', sans-serif;
-      font-weight: 400;
-      width: 100%;
-      grid-row: 2 / 3;
-      color: black;
-      margin: 0 auto;
-      height: 47px;
-      font-size: 20px;
-      border: none;
-    }
-    .btn--edit{
-      background: #E0EFFA;
-    }
-    .btn--share{
-      background: #F8E9FC;
-    }
-    .btn--delete{
-      background: #FDE2E2;
-    }
+}
+
+.list-header {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr, 1fr, auto;
+  grid-column-gap: 5px;
+  padding: 48px 15px 5px;
+  background-color: white;
+
+  h1 {
+    font-size: 20px;
+    grid-column: 1 / 4;
+    grid-row: 1 / 2;
   }
 }
 
+.btn--list {
+  display: inline-flex;
+  justify-content: center;
+  font-family: 'Walter Turncoat', sans-serif;
+  font-weight: 400;
+  width: 100%;
+  grid-row: 2 / 3;
+  color: black;
+  margin: 0 auto;
+  height: 47px;
+  font-size: 20px;
+  border: none;
+}
+
+.btn--edit{
+  background: $blue;
+}
+
+.btn--share{
+  background: #F8E9FC;
+}
+
+.btn--delete{
+  background: $red;
+}
+
+
+// media queries
 @media(hover: hover) and (pointer: fine) {
+
   .btn--edit:hover {
     box-shadow: 0 3px 4px 1px hsla(205, 36%, 47%, 0.7);
   }

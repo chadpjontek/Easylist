@@ -1,3 +1,5 @@
+@import 'variables';
+
 .container-view-lists {
   width: 100%;
   max-width: 1024px;
@@ -31,11 +33,19 @@
 .list {
   margin: 0;
   padding: 10px;
+  transition: box-shadow 0.2s ease-out;
+}
+
+.list--yellow {
+  background-color: $yellow;
+  box-shadow: $yellow-shadow;
 }
 
 
 @media(hover: hover) and (pointer: fine) {
-  .list:hover {
 
+  .list:hover {
+    box-shadow: 0px 3px 4px 1px hsla(0, 0%, 47%, 0.5);
+    z-index: 5;
   }
 }

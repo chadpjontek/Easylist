@@ -36,7 +36,7 @@ const ViewLists = (props) => {
       <h1 className='h1'>Your lists:</h1>
       <div className='lists'>
         {lists ? lists.map((list, i) => <div
-          style={{ backgroundColor: list.backgroundColor, transform: `rotate(${Math.floor(Math.random() * (10 - -10) + -10)}deg)` }}
+          style={{ backgroundColor: list.backgroundColor, transform: `rotate(${Math.floor(Math.random() * (15 - -15) + -15)}deg)` }}
           key={i}
           onClick={handleClick}
           className='list'>

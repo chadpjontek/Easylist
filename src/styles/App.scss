@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,800&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Walter+Turncoat&display=swap');
 
-$primary-color: #3F88C5;
+@import 'variables';
 
+// global
 *, *:before, *:after {
   box-sizing: border-box;
 }
@@ -19,6 +20,8 @@ body {
   overflow-x: hidden;
 }
 
+
+// nav
 nav {
   overflow: hidden;
   position: fixed;
@@ -64,6 +67,8 @@ nav {
   }
 }
 
+
+// shared styles
 .u-lock-scroll {
   overflow: hidden;
   .container {
@@ -85,10 +90,6 @@ nav {
   will-change: transform;
 }
 
-.container-home {
-  background-size: contain;
-}
-
 .h1 {
   margin: 0;
   padding: 10px 0 5px;
@@ -101,7 +102,7 @@ nav {
   border: none;
   padding: 0;
   margin: 0;
-  background: lightgray;
+  background: $muted-color;
   transition: all .2s;
   position: relative;
   overflow: hidden;
@@ -125,6 +126,62 @@ nav {
     padding-top: 120%;
     transition: width 0.2s ease-out, padding-top 0.2s ease-out;
   }
+}
+
+.editbox {
+  width: 90vw;
+  max-width: 900px;
+  margin: 10px auto 0;
+  padding: 15px;
+  font-family: 'Walter Turncoat', sans-serif;
+  font-size: 18px;
+  color: black;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  height: 74vh;
+  overflow-y: scroll;
+  transition: background-color 0.5s;
+
+  ul,
+  ol {
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+  }
+
+  &::-webkit-scrollbar { width: 0 !important }
+}
+
+.yellow--note {
+  background-color: $yellow;
+  box-shadow: $yellow-shadow;
+}
+
+.green--note {
+  background-color: $green;
+  box-shadow: $green-shadow;
+}
+
+.blue--note {
+  background-color: $blue;
+  box-shadow: $blue-shadow;
+}
+
+.purple--note {
+  background-color: $purple;
+  box-shadow: $purple-shadow;
+}
+
+.red--note {
+  background-color: $red;
+  box-shadow: $red-shadow;
+}
+
+
+// home styles
+.container-home {
+  background-size: contain;
 }
 
 .main__h2 {
@@ -164,7 +221,8 @@ nav {
   width: 208px;
   height: 195px;
   margin: 10px 0 0px 8px;
-  background: #F3FEA8;
+  background: $yellow;
+  box-shadow: $yellow-shadow;
   transform: rotate(4.92deg);
 }
 
@@ -172,7 +230,8 @@ nav {
   width: 222px;
   height: 187px;
   margin: 30px 20px 0 auto;
-  background: #C7F6D4;
+  background: $green;
+  box-shadow: $green-shadow;
   transform: rotate(-14.38deg);
 }
 
@@ -180,14 +239,16 @@ nav {
   width: 168px;
   height: 157px;
   margin: 5px 0 0 12px;
-  background: #E0EFFA;
+  background: $blue;
+  box-shadow: $blue-shadow;
 }
 
 .note--how2 {
   width: 180px;
   height: 170px;
   margin: -9px 19px 0 auto;
-  background: #F8E9FC;
+  background: $purple;
+  box-shadow: $purple-shadow;
   transform: rotate(14.46deg);
 }
 
@@ -195,14 +256,16 @@ nav {
   width: 192px;
   height: 184px;
   margin: -27px 0 0 12px;
-  background: #FDE2E2;
+  background: $red;
+  box-shadow: $red-shadow;
   transform: rotate(-3.16deg);
 }
 
 .note--how4 {
   width: 175px;
   height: 185px;
-  background: #F3FEA8;
+  background: $yellow;
+  box-shadow: $yellow-shadow;
   transform: rotate(21.38deg);
   margin: -9px 29px 0 auto;
 }
@@ -210,7 +273,8 @@ nav {
 .note--how5 {
   width: 153px;
   height: 144px;
-  background: #C7F6D4;
+  background: $green;
+  box-shadow: $green-shadow;
   transform: rotate(-0.03deg);
   margin: -27px 0 0 12px;
 }
@@ -218,7 +282,8 @@ nav {
 .note--how6 {
   width: 225px;
   height: 215px;
-  background: #E0EFFA;
+  background: $blue;
+  box-shadow: $blue-shadow;
   transform: rotate(-4.58deg);
   margin: -16px 14px 0 auto;
 }
@@ -226,7 +291,8 @@ nav {
 .note--donate {
   width: 224px;
   height: 234px;
-  background: #F8E9FC;
+  background: $purple;
+  box-shadow: $purple-shadow;
   transform: rotate(7deg);
   margin: -5px 0 0 15px;
   display: grid;
@@ -277,13 +343,23 @@ nav {
 /*=== media queries ===*/
 /* Less than 460 tall*/
 @media screen and (max-height: 460px) {
+
   .container {
     background: white;
   }
 }
 
+/* Less than 540 tall*/
+@media screen and (max-height: 540px) {
+
+  .editbox {
+    height: 44vh;
+  }
+}
+
 /* Greater than 799 */
 @media screen and (min-width: 800px) {
+
   .container--note {
     display: grid;
     max-width: 800px;
@@ -389,6 +465,7 @@ nav {
 
 // Less than 800px
 @media screen and (max-width: 799px) {
+
   .hamburger {
     position: absolute;
     cursor: pointer;
@@ -396,6 +473,7 @@ nav {
     top: 50%;
     transform: translate(-5%, -50%);
     z-index: 100;
+
     .line {
       width: 30px;
       height: 3px;
@@ -403,16 +481,20 @@ nav {
       margin: 5px;
       transition: transform 0.25s ease-in-out;
     }
+
     .open:nth-child(1) {
       transform: rotate(45deg) translate(4px, 6px);
     }
+
     .open:nth-child(2) {
       transform: scaleX(0);
     }
+
     .open:nth-child(3) {
       transform: rotate(-45deg) translate(6px, -7px);
     }
   }
+
   .nav-links {
     clip-path: inset(0 0 0 100%);
     position: fixed;
@@ -424,6 +506,7 @@ nav {
     align-items: flex-end;
     transition: all 0.6s;
   }
+
   .nav-links.open {
     clip-path: inset(0 0 0 50%);
     z-index: 99;

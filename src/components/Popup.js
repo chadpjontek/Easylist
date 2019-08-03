@@ -16,7 +16,7 @@ const Popup = ({ isShowing, hide, text }) => {
   return transitions.map(({ item, key, props }) =>
     item ? (
       <animated.div key={key} style={props} className='popup' onClick={() => hide(prevMsg)}>
-        <div className='note popup__inner'>
+        <div className='popup__inner'>
           <p>{text}</p>
         </div>
       </animated.div>
