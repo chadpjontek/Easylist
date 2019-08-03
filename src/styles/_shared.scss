@@ -129,7 +129,7 @@ nav {
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
-  height: 74vh;
+  height: 60vh;
   overflow-y: scroll;
   transition: background-color 0.5s;
 
@@ -182,7 +182,7 @@ nav {
 @media screen and (max-height: 540px) {
 
   .editbox {
-    height: 44vh;
+    height: 20vh;
   }
 }
 // Less than 800px

@@ -253,10 +253,10 @@ const EditList = (props) => {
           </div>
         </div>
       </div>
-      {showInput ? <form onSubmit={handleSubmit}>
+      <form style={showInput ? { visibility: 'visible' } : { visibility: 'hidden' }} onSubmit={handleSubmit}>
         <input id='inputText' type='text' required onChange={handleInputTextChange} />
         <label htmlFor='input'>Enter url</label>
-      </form> : null}
+      </form>
       <ContentEditable
         className={`editbox ${backgroundColor}--note`}
         tagName='pre'
