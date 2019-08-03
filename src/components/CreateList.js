@@ -32,7 +32,7 @@ const CreateList = (props) => {
     // Try to add list to indexedDB and redirect to edit page
     try {
       const { addListPromise } = await import(/* webpackChunkName: "addListPromise" */'../helpers/dbhelper');
-      const list = { name, html: '<ul><li><br></li></ul>', backgroundColor: '#E0EFFA' };
+      const list = { name, html: '<ul><li><br></li></ul>', backgroundColor: 'blue' };
       await addListPromise(list);
       props.history.push(`/lists/${encodeURIComponent(name)}/edit`, { name });
     } catch (error) {

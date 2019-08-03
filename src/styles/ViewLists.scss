@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'shared';
 
 .container-view-lists {
   width: 100%;
@@ -23,7 +23,7 @@
   grid-gap: 15px;
   font-size: 20px;
   font-family: 'Walter Turncoat', sans-serif;
-  margin: 0 10px;
+  margin: 10px;
   padding: 0;
   text-align: center;
   word-wrap: break-word;
@@ -31,21 +31,62 @@
 }
 
 .list {
+  max-width: 210px;
   margin: 0;
   padding: 10px;
   transition: box-shadow 0.2s ease-out;
 }
 
-.list--yellow {
-  background-color: $yellow;
-  box-shadow: $yellow-shadow;
+.yellow--note:active {
+  box-shadow: $yellow-hover;
+  z-index: 5;
+}
+
+.green--note:active {
+  box-shadow: $green-hover;
+  z-index: 5;
+}
+
+.blue--note:active {
+  box-shadow: $blue-hover;
+  z-index: 5;
+}
+
+.purple--note:active {
+  box-shadow: $purple-hover;
+  z-index: 5;
+}
+
+.red--note:active {
+  box-shadow: $red-hover;
+  z-index: 5;
 }
 
 
 @media(hover: hover) and (pointer: fine) {
 
-  .list:hover {
-    box-shadow: 0px 3px 4px 1px hsla(0, 0%, 47%, 0.5);
+  .yellow--note:hover {
+    box-shadow: $yellow-hover;
+    z-index: 5;
+  }
+
+  .green--note:hover {
+    box-shadow: $green-hover;
+    z-index: 5;
+  }
+
+  .blue--note:hover {
+    box-shadow: $blue-hover;
+    z-index: 5;
+  }
+
+  .purple--note:hover {
+    box-shadow: $purple-hover;
+    z-index: 5;
+  }
+
+  .red--note:hover {
+    box-shadow: $red-hover;
     z-index: 5;
   }
 }

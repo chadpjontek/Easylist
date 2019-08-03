@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'shared';
 
 .container-list {
   width: 100%;
@@ -43,14 +43,26 @@
 
 .btn--edit{
   background: $blue;
+
+  &:active {
+    box-shadow: $blue-hover;
+  }
 }
 
 .btn--share{
-  background: #F8E9FC;
+  background: $purple;
+
+  &:active {
+    box-shadow: $purple-hover;
+  }
 }
 
 .btn--delete{
   background: $red;
+
+  &:active {
+    box-shadow: $red-hover;
+  }
 }
 
 
@@ -58,14 +70,14 @@
 @media(hover: hover) and (pointer: fine) {
 
   .btn--edit:hover {
-    box-shadow: 0 3px 4px 1px hsla(205, 36%, 47%, 0.7);
+    box-shadow: $blue-hover
   }
 
   .btn--share:hover {
-    box-shadow: 0 3px 4px 1px hsla(287, 36%, 47%, 0.7);
+    box-shadow: $purple-hover
   }
 
   .btn--delete:hover {
-    box-shadow: 0 3px 4px 1px hsla(0, 36%, 47%, 0.7);
+    box-shadow: $red-hover
   }
 }

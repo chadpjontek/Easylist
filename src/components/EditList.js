@@ -147,11 +147,11 @@ const EditList = (props) => {
    */
   const cycleBgColor = () => {
     const colors = [
-      '#E0EFFA', // blue
-      '#F8E9FC', // purple
-      '#FDE2E2', // red
-      '#F3FEA8', // yellow
-      '#C7F6D4' // green
+      'blue',
+      'purple',
+      'red',
+      'yellow',
+      'green'
     ];
     // Get current color's index
     const curColIdx = colors.findIndex(e => e === backgroundColor);
@@ -218,30 +218,30 @@ const EditList = (props) => {
         <div className="edit">
           <div className='row'>
             <div className="column">
-              <button className={isOl ? 'btn btn-edit selected' : 'btn btn-edit'} onMouseDown={toggleOl}><img src={ol} alt="toggle ordered list" /></button>
+              <button className={isOl ? 'btn btn-edit purple' : 'btn btn-edit'} onMouseDown={toggleOl}><img src={ol} alt="toggle ordered list" /></button>
             </div>
             <div className="column">
-              <button className={isBold ? 'btn btn-edit selected' : 'btn btn-edit'} onMouseDown={toggleBold}>
+              <button className={isBold ? 'btn btn-edit purple' : 'btn btn-edit'} onMouseDown={toggleBold}>
                 <img src={bold} alt="toggle bold" />
               </button>
             </div>
             <div className="column">
-              <button className={isItalic ? 'btn btn-edit selected' : 'btn btn-edit'} onMouseDown={toggleItalic}>
+              <button className={isItalic ? 'btn btn-edit purple' : 'btn btn-edit'} onMouseDown={toggleItalic}>
                 <img src={italic} alt="toggle italic" />
               </button>
             </div>
             <div className="column">
-              <button className='btn btn-edit highlight' onMouseDown={createLink}>
+              <button className='btn btn-edit yellow' onMouseDown={createLink}>
                 <img src={link} alt="link to other list" />
               </button>
             </div>
             <div className="column">
-              <button className='btn btn-edit' onMouseDown={cycleBgColor} style={{ backgroundColor }}>
+              <button className={`btn btn-edit ${backgroundColor}`} onMouseDown={cycleBgColor}>
                 <img src={pantone} alt="toggle underline" />
               </button>
             </div>
             <div className="column">
-              <button className={notificationsOn ? 'btn btn-edit alert' : 'btn btn-edit'} onMouseDown={toggleNotify}>
+              <button className={notificationsOn ? 'btn btn-edit red' : 'btn btn-edit'} onMouseDown={toggleNotify}>
                 <img src={notify} alt="toggle notification" />
               </button>
             </div>
@@ -258,8 +258,7 @@ const EditList = (props) => {
         <label htmlFor='input'>Enter url</label>
       </form> : null}
       <ContentEditable
-        style={{ backgroundColor }}
-        className='editbox'
+        className={`editbox ${backgroundColor}--note`}
         tagName='pre'
         html={html}
         onChange={handleChange}

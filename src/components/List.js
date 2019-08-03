@@ -74,7 +74,7 @@ const List = (props) => {
         <button className='btn btn--list btn--share' onClick={shareList}>share</button>
         <button className='btn btn--list btn--delete' onClick={deleteList}>delete</button>
       </div>
-      <div className="editbox" style={{ backgroundColor }} dangerouslySetInnerHTML={{ __html: html }}></div>
+      <div className={`editbox ${backgroundColor}--note`} dangerouslySetInnerHTML={{ __html: html }}></div>
     </div >
   );
 };

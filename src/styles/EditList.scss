@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'shared';
 
 .container-edit {
   width: 100%;
@@ -104,23 +104,23 @@
   transition: box-shadow 0.2s ease-out, background-color 0.2s;
 }
 
-.success {
+.green {
   background: $green;
 }
 
-.selected {
-  background: #F8E9FC;
+.purple {
+  background: $purple;
 }
 
-.highlight {
+.yellow {
   background: $yellow;
 }
 
-.alert {
+.red {
   background: $red;
 }
 
-.primary {
+.blue {
   background: $blue;
 }
 
