@@ -44,6 +44,10 @@ const EditList = (props) => {
       }
     };
     fetchData();
+    // ... make page unscrollable
+    document.body.style.overflowY = 'hidden';
+    // ... return a function to restore scrolling on dismount
+    return () => document.body.style.overflowY = 'visible';
   }, []);
 
   // Focus input text when it is rendered
