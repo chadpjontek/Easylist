@@ -59,11 +59,12 @@ const EditList = (props) => {
 
   // ... when text selection changes
   useEffect(() => {
-    document.addEventListener('selectionchange', () => {
+    const handleNewSelection = () => {
       selectionIsBold() ? setIsBold(true) : setIsBold(false);
       selectionIsItalic() ? setIsItalic(true) : setIsItalic(false);
-    });
-    return () => document.removeEventListener('selectionchange');
+    };
+    document.addEventListener('selectionchange', handleNewSelection);
+    return () => document.removeEventListener('selectionchange', handleNewSelection);
   }, []);
 
   /**
@@ -165,7 +166,7 @@ const EditList = (props) => {
   const toggleBold = e => {
     e.preventDefault();
     // ... focus the ContentEditable
-    if (document.activeElement === document.querySelector('pre')) {
+    if (document.activeElement !== document.querySelector('pre')) {
       document.querySelector('pre').focus();
     }
     document.execCommand('bold', false);
@@ -178,7 +179,7 @@ const EditList = (props) => {
   const toggleItalic = e => {
     e.preventDefault();
     // ... focus the ContentEditable
-    if (document.activeElement === document.querySelector('pre')) {
+    if (document.activeElement !== document.querySelector('pre')) {
       document.querySelector('pre').focus();
     }
     document.execCommand('italic', false);
@@ -211,7 +212,13 @@ const EditList = (props) => {
    */
   const createLink = e => {
     e.preventDefault();
+    if (showInput) {
+      setShowInput(false);
+      setUrl('');
+      return document.querySelector('pre').focus();
+    }
     setSelection(saveSelection());
+    setUrl('');
     setShowInput(true);
   };
 
@@ -261,26 +268,26 @@ const EditList = (props) => {
         <div className="edit">
           <div className='row'>
             <div className="column">
+              <button className={`btn btn-edit ${backgroundColor}`} onMouseDown={cycleBgColor}>
+                <img src={pantone} alt="toggle underline" />
+              </button>
+            </div>
+            <div className="column">
               <button className={isOl ? 'btn btn-edit purple' : 'btn btn-edit'} onMouseDown={toggleOl}><img src={ol} alt="toggle ordered list" /></button>
             </div>
             <div className="column">
-              <button className={isBold ? 'btn btn-edit purple' : 'btn btn-edit'} onMouseDown={toggleBold}>
+              <button className={isBold ? 'btn btn-edit blue' : 'btn btn-edit'} onMouseDown={toggleBold}>
                 <img src={bold} alt="toggle bold" />
               </button>
             </div>
             <div className="column">
-              <button className={isItalic ? 'btn btn-edit purple' : 'btn btn-edit'} onMouseDown={toggleItalic}>
+              <button className={isItalic ? 'btn btn-edit green' : 'btn btn-edit'} onMouseDown={toggleItalic}>
                 <img src={italic} alt="toggle italic" />
               </button>
             </div>
             <div className="column">
-              <button className='btn btn-edit yellow' onMouseDown={createLink}>
+              <button className={showInput ? 'btn btn-edit yellow' : 'btn btn-edit'} onMouseDown={createLink}>
                 <img src={link} alt="link to other list" />
-              </button>
-            </div>
-            <div className="column">
-              <button className={`btn btn-edit ${backgroundColor}`} onMouseDown={cycleBgColor}>
-                <img src={pantone} alt="toggle underline" />
               </button>
             </div>
             <div className="column">
@@ -297,8 +304,8 @@ const EditList = (props) => {
         </div>
       </div>
       <form style={showInput ? { visibility: 'visible' } : { visibility: 'hidden' }} onSubmit={handleSubmit}>
-        <input id='inputText' type='text' required onChange={handleInputTextChange} />
-        <label htmlFor='input'>Enter url</label>
+        <input id='inputText' type='text' required onChange={handleInputTextChange} value={url} />
+        <label htmlFor='input'>Enter URL or list name</label>
       </form>
       <ContentEditable
         className={`editbox ${backgroundColor}--note`}
