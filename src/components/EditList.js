@@ -57,6 +57,15 @@ const EditList = (props) => {
     }
   });
 
+  // ... when text selection changes
+  useEffect(() => {
+    document.addEventListener('selectionchange', () => {
+      selectionIsBold() ? setIsBold(true) : setIsBold(false);
+      selectionIsItalic() ? setIsItalic(true) : setIsItalic(false);
+    });
+    return () => document.removeEventListener('selectionchange');
+  }, []);
+
   /**
  * Save the selection by returning its range objects
  */
@@ -92,6 +101,28 @@ const EditList = (props) => {
         savedSel.select();
       }
     }
+  };
+
+  /**
+   * Returns whether the selection is italic or not
+   */
+  const selectionIsItalic = () => {
+    let isItalic = false;
+    if (document.queryCommandState) {
+      isItalic = document.queryCommandState('italic');
+    }
+    return isItalic;
+  };
+
+  /**
+   * Returns whether the selection is bold or not
+   */
+  const selectionIsBold = () => {
+    let isBold = false;
+    if (document.queryCommandState) {
+      isBold = document.queryCommandState('bold');
+    }
+    return isBold;
   };
 
   // Handle form submit
@@ -133,6 +164,10 @@ const EditList = (props) => {
    */
   const toggleBold = e => {
     e.preventDefault();
+    // ... focus the ContentEditable
+    if (document.activeElement === document.querySelector('pre')) {
+      document.querySelector('pre').focus();
+    }
     document.execCommand('bold', false);
     setIsBold(!isBold);
   };
@@ -142,6 +177,10 @@ const EditList = (props) => {
    */
   const toggleItalic = e => {
     e.preventDefault();
+    // ... focus the ContentEditable
+    if (document.activeElement === document.querySelector('pre')) {
+      document.querySelector('pre').focus();
+    }
     document.execCommand('italic', false);
     setIsItalic(!isItalic);
   };
