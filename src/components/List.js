@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
+import { validateListName } from '../helpers';
 import { getListPromise } from '../helpers/dbhelper';
 import '../styles/List.scss';
 
@@ -11,9 +12,19 @@ const List = (props) => {
   // local state getters/setters
   const [html, setHtml] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
+  const [isInvalidList, setisInvalidList] = useState(false);
+
+  // Get/set state of popup
+  const { isShowingPopup, togglePopup, message } = usePopup();
 
   // on first load...
   useEffect(() => {
+    // Check validity of list name and handle
+    if (!validateListName(name)) {
+      const msg = 'Name must be between 1 and 24 characters and not start with a space.';
+      togglePopup(msg);
+      return setisInvalidList(true);
+    }
     // ...update title
     document.title = name;
     // ...fetch list
@@ -28,9 +39,6 @@ const List = (props) => {
     };
     fetchData();
   }, []);
-
-  // Get/set state of popup
-  const { isShowingPopup, togglePopup, message } = usePopup();
 
   // Function to delete a list
   const deleteList = async () => {
@@ -61,13 +69,17 @@ const List = (props) => {
   };
 
 
-  return (
-    <div className='container-list'>
+  return (isInvalidList ?
+    <div className='list--error'>
       <Popup
         isShowing={isShowingPopup}
         text={message}
-        hide={togglePopup}>
-      </Popup>
+        hide={togglePopup} >
+      </Popup >
+      <button className='btn btn--error' onClick={() => props.history.push('/')}>Home</button>
+    </div >
+    :
+    <div className='container-list'>
       <div className="list-header">
         <h1 className='h1'>{name}</h1>
         <button className='btn btn--list btn--edit' onClick={editList}>edit</button>

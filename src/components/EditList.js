@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
+import Popup from './Popup';
+import usePopup from '../hooks/usePopup';
+import { validateListName } from '../helpers';
 import { getListPromise } from '../helpers/dbhelper';
 import bold from '../images/bold.svg';
 import pantone from '../images/pantone.svg';
@@ -18,15 +21,25 @@ const EditList = (props) => {
   const [isOl, setIsOl] = useState(false);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState('#E0EFFA');
+  const [backgroundColor, setBackgroundColor] = useState('blue');
   const [notificationsOn, setNotificationsOn] = useState(false);
   const [html, setHtml] = useState('');
   const [showInput, setShowInput] = useState(false);
   const [selection, setSelection] = useState(undefined);
   const [url, setUrl] = useState('');
+  const [isInvalidList, setisInvalidList] = useState(false);
+
+  // Get/set state of popup
+  const { isShowingPopup, togglePopup, message } = usePopup();
 
   // on first load...
   useEffect(() => {
+    // Check validity of list name and handle
+    if (!validateListName(name)) {
+      const msg = 'Name must be between 1 and 24 characters and not start with a space.';
+      togglePopup(msg);
+      return setisInvalidList(true);
+    }
     // ...update title
     document.title = `Edit ${name}`;
     // ... focus the ContentEditable
@@ -261,7 +274,16 @@ const EditList = (props) => {
     setUrl(e.target.value);
   };
 
-  return (
+  return (isInvalidList ?
+    <div className='list--error'>
+      <Popup
+        isShowing={isShowingPopup}
+        text={message}
+        hide={togglePopup} >
+      </Popup >
+      <button className='btn btn--error' onClick={() => props.history.push('/')}>Home</button>
+    </div >
+    :
     <div className='container-edit'>
       <div className="container-edit__header">
         <h1 className='h1'>{name}</h1>
@@ -313,8 +335,7 @@ const EditList = (props) => {
         html={html}
         onChange={handleChange}
       />
-    </div>
-  );
+    </div>);
 };
 
 export default EditList;

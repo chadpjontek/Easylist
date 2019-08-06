@@ -24,7 +24,7 @@ const CreateList = (props) => {
 
     // Get the list name from text input, validate, and sanitize.
     if (!validateListName(inputValue)) {
-      const msg = 'Name must be between 3 and 24 characters and not start with a space.';
+      const msg = 'Name must be between 1 and 24 characters and not start with a space.';
       return togglePopup(msg);
     }
     const name = cleanInput(inputValue);

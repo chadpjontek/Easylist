@@ -5,7 +5,7 @@
 const cleanInput = (input) => input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // ListName regex
-const listNameRe = /^\S.{2,23}$/;
+const listNameRe = /^\S.{0,23}$/;
 /**
  * Returns true if a valid list name
  * @param {string} listName - List name to be validated

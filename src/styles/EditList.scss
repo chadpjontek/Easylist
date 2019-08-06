@@ -50,6 +50,32 @@
   }
 }
 
+.list--error {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  width: 100vw;
+  height: 100vh;
+  will-change: transform;
+  background: url(../images/paper.svg);
+  background-repeat: repeat-y;
+  background-position: top;
+  background-size: cover;
+}
+
+.btn--error {
+  display: block;
+  margin: 0 auto;
+  width: 127px;
+  height: 47px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: white;
+  background-color: $primary-color;
+  border: none;
+}
+
 .container-edit__header {
   margin: 48px auto 0;
   background-color: white;
@@ -129,6 +155,10 @@
 
   .btn-edit:hover {
     box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn--error:hover {
+    box-shadow: 0 3px 4px 1px hsla(207, 25%, 30%, 1);
   }
 }
 
