@@ -65,28 +65,30 @@
 
 @media(hover: hover) and (pointer: fine) {
 
-  .yellow--note:hover {
-    box-shadow: $yellow-hover;
-    z-index: 5;
-  }
+  .lists {
+    .yellow--note:hover {
+      box-shadow: $yellow-hover;
+      z-index: 5;
+    }
 
-  .green--note:hover {
-    box-shadow: $green-hover;
-    z-index: 5;
-  }
+    .green--note:hover {
+      box-shadow: $green-hover;
+      z-index: 5;
+    }
 
-  .blue--note:hover {
-    box-shadow: $blue-hover;
-    z-index: 5;
-  }
+    .blue--note:hover {
+      box-shadow: $blue-hover;
+      z-index: 5;
+    }
 
-  .purple--note:hover {
-    box-shadow: $purple-hover;
-    z-index: 5;
-  }
+    .purple--note:hover {
+      box-shadow: $purple-hover;
+      z-index: 5;
+    }
 
-  .red--note:hover {
-    box-shadow: $red-hover;
-    z-index: 5;
+    .red--note:hover {
+      box-shadow: $red-hover;
+      z-index: 5;
+    }
   }
 }
