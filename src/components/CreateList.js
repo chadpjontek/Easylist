@@ -34,11 +34,34 @@ const CreateList = (props) => {
       const { addListPromise } = await import(/* webpackChunkName: "addListPromise" */'../helpers/dbhelper');
       const list = { name, html: '<ul><li><br></li></ul>', backgroundColor: 'blue' };
       await addListPromise(list);
-      props.history.push(`/lists/${encodeURIComponent(name)}/edit`, { name });
+      // if this goes ok let's see if the user has a login token
+      const token = localStorage.getItem('jwt');
+      if (token) {
+        // They do so attempt to add to mongoDB
+        const response = await fetch('http://localhost:3000/api/lists', {
+          body: JSON.stringify({ name, html: '<ul><li><br></li></ul>', backgroundColor: 'blue' }),
+          mode: 'cors',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'x-auth-token': token
+          },
+        });
+        // Parse body as json
+        const json = await response.json();
+        if (json.error) {
+          return togglePopup(json.error);
+        }
+        if (json.msg) {
+          // Redirect to new list to edit
+          return props.history.push(`/lists/${encodeURIComponent(name)}/edit`, { name });
+        }
+        // If no json returned throw error
+        throw new Error('something went wrong');
+      }
     } catch (error) {
-      const msg = 'Couldn\'t add list. List names must be unique.';
+      const msg = `${error.name} - ${error.message}`;
       togglePopup(msg);
-      throw new Error(error);
     }
   };
 

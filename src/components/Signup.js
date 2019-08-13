@@ -46,9 +46,9 @@ const Signup = (props) => {
         if (json.error) {
           return togglePopup(json.error);
         }
-        if (json.message) {
+        if (json.msg) {
           // Notify user of successful signin
-          togglePopup(json.message);
+          togglePopup(json.msg);
           return;
         }
         // If no json returned throw error
