@@ -11,6 +11,7 @@ import '../styles/App.scss';
 // lazy load routes
 const Home = lazy(() => import(/* webpackChunkName: "Home" */'./Home'));
 const SignIn = lazy(() => import(/* webpackChunkName: "SignIn" */'./SignIn'));
+const SignUp = lazy(() => import(/* webpackChunkName: "SignIn" */'./SignUp'));
 const CreateList = lazy(() => import(/* webpackChunkName: "CreateList" */'./CreateList'));
 const ViewLists = lazy(() => import(/* webpackChunkName: "ViewLists" */'./ViewLists'));
 const Donate = lazy(() => import(/* webpackChunkName: "Donate" */'./Donate'));
@@ -63,6 +64,7 @@ const App = () => {
               <Switch location={item}>
                 <Route exact path="/" component={Home} />
                 <Route path='/signin' component={SignIn} />
+                <Route path='/signup' component={SignUp} />
                 <Route exact path="/lists/create" component={CreateList} />
                 <Route exact path="/lists" component={ViewLists} />
                 <Route path="/donate" component={Donate} />

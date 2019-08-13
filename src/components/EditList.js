@@ -248,7 +248,7 @@ const EditList = (props) => {
     } else {
       // ... turn them on
       setNotificationsOn(true);
-      const msg = 'Notifications on. You will recieve an email when someone you share this list with completes it&#39;s tasks.';
+      const msg = 'Notifications on. You will recieve an email when someone you share this list with completes it\'s tasks.';
       togglePopup(msg);
     }
   };
