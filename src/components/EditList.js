@@ -243,9 +243,13 @@ const EditList = (props) => {
     if (notificationsOn) {
       // ... turn them off
       setNotificationsOn(false);
+      const msg = 'Notifications off. You will no longer be notified with task completions for this list.';
+      togglePopup(msg);
     } else {
       // ... turn them on
       setNotificationsOn(true);
+      const msg = 'Notifications on. You will recieve an email when someone you share this list with completes it&#39;s tasks.';
+      togglePopup(msg);
     }
   };
 
@@ -284,7 +288,12 @@ const EditList = (props) => {
       <button className='btn btn--error' onClick={() => props.history.push('/')}>Home</button>
     </div >
     :
-    <div className='container-edit'>
+    <div className='container edit-list'>
+      <Popup
+        isShowing={isShowingPopup}
+        text={message}
+        hide={togglePopup} >
+      </Popup >
       <div className="container-edit__header">
         <h1 className='h1'>{name}</h1>
         <div className="edit">

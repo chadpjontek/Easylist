@@ -1,0 +1,98 @@
+@import 'variables';
+
+.signin {
+
+  form {
+    margin: 5px auto 0;
+    width: 320px;
+    grid-auto-rows: 28px;
+    grid-gap: 20px;
+    font-size: 20px;
+    font-family: 'Raleway', sans-serif;
+
+    .group {
+      position: relative;
+      margin: 45px 0;
+    }
+
+    input {
+      font-family: "Raleway", sans-serif;
+      font-size: 20px;
+      background: $yellow;
+      color: $primary-color;
+      font-size: 18px;
+      padding: 10px 10px 10px 5px;
+      display: block;
+      width: 320px;
+      border: none;
+      border-radius: 0;
+
+      &:focus{
+        outline: none;
+      }
+
+      &:focus ~ label,
+      &:valid ~ label {
+        top: -14px;
+        font-size: 14px;
+        color: $primary-color;
+      }
+    }
+
+    label {
+      color: $primary-color;
+      font-size: 20px;
+      font-weight: normal;
+      position: absolute;
+      pointer-events: none;
+      left: 5px;
+      top: 10px;
+      transition: 300ms ease all;
+    }
+  }
+}
+
+.note--signup {
+  margin: 40px auto 0;
+  text-align: center;
+  background: $green;
+  box-shadow: $green-shadow;
+  transform: rotate(10deg);
+  width: 200px;
+  height: 206px;
+  font-family: 'Walter Turncoat', sans-serif;
+  text-indent: 15px;
+  padding: 17px;
+}
+
+.btn--signin,
+.note--signup__button {
+  font-family: 'Raleway', sans-serif;
+  background: $primary-color;
+  display: block;
+  justify-content: center;
+  font-weight: 800;
+  width: 120px;
+  color: white;
+  margin: 0 auto;
+  height: 47px;
+  font-size: 20px;
+  border: none;
+
+  &:active {
+    box-shadow: $primary-hover;
+  }
+}
+
+.spinner {
+  text-align: center;
+}
+
+// media queries
+@media(hover: hover) and (pointer: fine) {
+
+  .btn--signin:hover,
+  .note--signup__button:hover {
+    box-shadow: $primary-hover;
+  }
+}

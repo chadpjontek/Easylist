@@ -79,7 +79,12 @@ const List = (props) => {
       <button className='btn btn--error' onClick={() => props.history.push('/')}>Home</button>
     </div >
     :
-    <div className='container-list'>
+    <div className='container view-list'>
+      <Popup
+        isShowing={isShowingPopup}
+        text={message}
+        hide={togglePopup} >
+      </Popup >
       <div className="list-header">
         <h1 className='h1'>{name}</h1>
         <button className='btn btn--list btn--edit' onClick={editList}>edit</button>

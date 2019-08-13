@@ -68,12 +68,10 @@ nav {
 }
 
 .container {
-  position: absolute;
-  top: 46px;
   width: 100%;
   max-width: 1024px;
   min-height: 100vh;
-  margin: 0 auto;
+  margin-top: 48px;
   background: url(../images/paper.svg);
   background-repeat: repeat-y;
   background-position: top;
@@ -121,7 +119,7 @@ nav {
 .editbox {
   width: 90vw;
   max-width: 900px;
-  margin: 10px auto 0;
+  margin: 15px auto 0;
   padding: 15px;
   font-family: 'Walter Turncoat', sans-serif;
   font-size: 18px;
