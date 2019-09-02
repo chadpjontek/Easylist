@@ -12,7 +12,7 @@ const listNameRe = /^\S.{0,23}$/;
  */
 const validateListName = (listName) => listNameRe.test(listName);
 
-module.exports = {
+export {
   cleanInput,
   validateListName
 };

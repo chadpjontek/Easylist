@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
-import { validateListName } from '../helpers';
-import { getListPromise } from '../helpers/dbhelper';
+import Spinner from '../components/Spinner';
+import {
+  getListPromise,
+  updateListPromise,
+  addToQueue,
+  updateExternalList,
+  postQueue
+} from '../helpers/dbhelper';
 import bold from '../images/bold.svg';
 import pantone from '../images/pantone.svg';
 import italic from '../images/italic.svg';
@@ -14,8 +20,8 @@ import save from '../images/save-icon.svg';
 import '../styles/EditList.scss';
 
 const EditList = (props) => {
-  // Get the name of list from the url path
-  const name = decodeURI(window.location.pathname.split('/')[2]);
+  // Get the _id of list from the url path
+  const _id = decodeURI(window.location.pathname.split('/')[2]);
 
   // local state getters/setters
   const [isOl, setIsOl] = useState(false);
@@ -24,39 +30,40 @@ const EditList = (props) => {
   const [backgroundColor, setBackgroundColor] = useState('blue');
   const [notificationsOn, setNotificationsOn] = useState(false);
   const [html, setHtml] = useState('');
+  const [isPrivate, setIsPrivate] = useState(true);
   const [showInput, setShowInput] = useState(false);
   const [selection, setSelection] = useState(undefined);
   const [url, setUrl] = useState('');
   const [isInvalidList, setisInvalidList] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('');
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
 
   // on first load...
   useEffect(() => {
-    // Check validity of list name and handle
-    if (!validateListName(name)) {
-      const msg = 'Name must be between 1 and 24 characters and not start with a space.';
-      togglePopup(msg);
-      return setisInvalidList(true);
-    }
-    // ...update title
-    document.title = `Edit ${name}`;
-    // ... focus the ContentEditable
-    document.querySelector('pre').focus();
-    // ...fetch list data from IDB
+    // ...fetch list data from IDB by _id
     const fetchData = async () => {
       try {
-        const { html, backgroundColor, notificationsOn } = await getListPromise(name);
+        const { name, html, backgroundColor, notificationsOn, isPrivate } = await getListPromise(_id);
+        // ...update title
+        document.title = `Edit ${name}`;
         // ...update list state
+        setName(name);
         setHtml(html);
         setBackgroundColor(backgroundColor);
         setNotificationsOn(notificationsOn);
+        setIsPrivate(isPrivate);
       } catch (error) {
-        throw new Error(error);
+        console.log(error);
+        setisInvalidList(true);
+        togglePopup('This list does not exist.');
       }
     };
     fetchData();
+    // ... focus the ContentEditable
+    document.querySelector('pre').focus();
     // ... make page unscrollable
     document.body.style.overflowY = 'hidden';
     // ... return a function to restore scrolling on dismount
@@ -253,24 +260,44 @@ const EditList = (props) => {
     }
   };
 
+
+
   /**
    * Save list to IDB before redirecting to List page
    */
   const saveList = async () => {
     const updatedList = {
+      _id,
       name,
       html,
       notificationsOn,
-      backgroundColor
+      backgroundColor,
+      isPrivate,
+      updatedAt: Date.now()
     };
     try {
+      // Attempt to update list on MongoDB
+      setIsLoading(true);
+      let isUpdated;
+      const posted = await postQueue(_id);
+      if (posted) {
+        // make sure we have the id on the external db
+        updatedList._id = posted;
+        isUpdated = await updateExternalList(updatedList);
+      }
+      setIsLoading(false);
+      if (!isUpdated) {
+        // update failed so add update to queue
+        console.log('adding update action to queue');
+        await addToQueue({ ...updatedList, action: 'update' });
+      }
       // Update the list in IDB
-      const { updateListPromise } = await import(/* webpackChunkName: "updateListPromise" */'../helpers/dbhelper');
       await updateListPromise(updatedList);
       // Redirect to list page
-      props.history.push(`/lists/${name}`, { name });
+      props.history.push(`/lists/${_id}`, { _id });
     } catch (error) {
-      throw new Error(error);
+      togglePopup(error);
+      setIsLoading(false);
     }
   };
 
@@ -327,9 +354,15 @@ const EditList = (props) => {
               </button>
             </div>
             <div className="column">
-              <button className='btn btn-edit success' onClick={saveList}>
-                <img src={save} alt="save list" />
-              </button>
+              {isLoading ?
+                <button className='btn btn-edit green'>
+                  <img src={save} alt="save list" />
+                </button>
+                :
+                <button className='btn btn-edit' onClick={saveList}>
+                  <img src={save} alt="save list" />
+                </button>
+              }
             </div>
           </div>
         </div>

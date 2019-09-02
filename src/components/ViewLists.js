@@ -25,10 +25,10 @@ const ViewLists = (props) => {
   }, []);
 
   // handle list click
-  const handleClick = e => {
+  const handleClick = _id => {
     // redirect to the list page
-    const name = e.target.innerHTML;
-    props.history.push(`/lists/${name}`, { name });
+    // const name = e.target.innerHTML;
+    props.history.push(`/lists/${_id}`, { _id });
   };
 
   return (
@@ -37,8 +37,8 @@ const ViewLists = (props) => {
       <div className='lists'>
         {lists ? lists.map((list, i) => <div
           style={{ transform: `rotate(${Math.floor(Math.random() * (15 - -15) + -15)}deg)` }}
-          key={i}
-          onClick={handleClick}
+          key={list._id}
+          onClick={() => handleClick(list._id)}
           className={`list ${list.backgroundColor}--note`}>
           {list.name}
         </div>) : null}

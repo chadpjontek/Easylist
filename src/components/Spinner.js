@@ -1,9 +1,10 @@
 import React from 'react';
 import { useSpring, animated } from 'react-spring';
 
-const Spinner = () => {
+const Spinner = (props) => {
+  const { content } = props;
   // Create route page animations
-  const props = useSpring({
+  const style = useSpring({
     from: { opacity: 0 },
     to: async next => {
       // eslint-disable-next-line no-constant-condition
@@ -15,7 +16,7 @@ const Spinner = () => {
   });
 
   return (
-    <animated.div className='btn note--signup__button spinner' style={props}>checking...</animated.div>
+    <animated.div className='btn btn--primary spinner' style={style}>{content}</animated.div>
   );
 };
 

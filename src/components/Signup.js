@@ -26,12 +26,11 @@ const Signup = (props) => {
    */
   const handleSubmit = e => {
     e.preventDefault();
-    // Show spinner while making network request
-    setIsLoading(true);
-
     // Send a request to the server to signup
     (async () => {
       try {
+        // Show spinner while making network request
+        setIsLoading(true);
         const response = await fetch('http://localhost:3000/api/users', {
           body: JSON.stringify({ username, email, password }),
           mode: 'cors',
@@ -41,15 +40,15 @@ const Signup = (props) => {
           },
         });
         // Parse body as json
-        setIsLoading(false);
         const json = await response.json();
-        if (json.error) {
-          return togglePopup(json.error);
-        }
         if (json.msg) {
-          // Notify user of successful signin
+          // Notify user of successful signup
+          setIsLoading(false);
           togglePopup(json.msg);
           return;
+        }
+        if (json.error) {
+          throw new Error(json.error);
         }
         // If no json returned throw error
         throw new Error('something went wrong');
@@ -76,33 +75,40 @@ const Signup = (props) => {
   };
 
   return (
-    <div className='container signin'>
+    <div className='container'>
       <Popup
         isShowing={isShowingPopup}
         text={message}
         hide={togglePopup} >
       </Popup >
-      <div>
+      <div className='form-container'>
         <form id='signIn' onSubmit={handleSubmit}>
           <div className="group">
-            <input required className='username-input' type="text" name="" id="username" onChange={handleChange} />
+            <input
+              required
+              minLength='3'
+              maxLength='16'
+              className='username-input'
+              type="text"
+              id="username"
+              onChange={handleChange} />
             <label className='label--username' htmlFor="username">username</label>
           </div>
           <div className="group">
-            <input required className='email-input' type="text" name="" id="email" onChange={handleChange} />
+            <input required className='email-input' type="text" id="email" onChange={handleChange} />
             <label className='label--email' htmlFor="email">email</label>
           </div>
           <div className="group">
-            <input required type="password" name="" id="password" onChange={handleChange} />
+            <input required type="password" id="password" onChange={handleChange} />
             <label className='label--password' htmlFor="password">password</label>
           </div>
-          {isLoading ? <Spinner /> : <button className='btn btn--signin' type="submit">Sign up</button>}
+          {isLoading ? <Spinner content='checking...' /> : <button className='btn btn--primary' type="submit">Sign up</button>}
 
         </form>
       </div>
       <div className="note note--signup">
         <p className="note--signup__p">Already have an account?</p>
-        <button onClick={() => props.history.push('/signin')} className="btn note--signup__button">Sign in</button>
+        <button onClick={() => props.history.push('/signin')} className="btn btn--primary">Sign in</button>
       </div>
     </div>
   );

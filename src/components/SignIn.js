@@ -31,12 +31,11 @@ const SignIn = (props) => {
    */
   const handleSubmit = e => {
     e.preventDefault();
-    // Show spinner while making network request
-    setIsLoading(true);
-
     // Send a request to the server to signin with email and password
     (async () => {
       try {
+        // Show spinner while making network request
+        setIsLoading(true);
         const response = await fetch('http://localhost:3000/api/users/signin', {
           body: JSON.stringify({ email, password }),
           mode: 'cors',
@@ -46,20 +45,17 @@ const SignIn = (props) => {
           },
         });
         // Parse body as json
-        setIsLoading(false);
         const json = await response.json();
-        if (json.error) {
-          return togglePopup(json.error);
-        }
         if (json.token) {
           // Put JWT in localStorage for future authentication
           localStorage.setItem('jwt', json.token);
           // Notify user of successful signin
-          const msg = 'Sign in successful!';
-          togglePopup(msg);
-          //TODO: Sync idb and mongo
-
+          setIsLoading(false);
+          togglePopup('Successful sign in!');
           return;
+        }
+        if (json.error) {
+          throw new Error(json.error);
         }
         // If no json returned throw error
         throw new Error('something went wrong');
@@ -85,13 +81,13 @@ const SignIn = (props) => {
   };
 
   return (
-    <div className='container signin'>
+    <div className='container'>
       <Popup
         isShowing={isShowingPopup}
         text={message}
         hide={togglePopup} >
       </Popup >
-      <div>
+      <div className='form-container'>
         <form id='signIn' onSubmit={handleSubmit}>
           <div className="group">
             <input required className='email-input' type="text" name="" id="email" onChange={handleChange} />
@@ -101,14 +97,13 @@ const SignIn = (props) => {
             <input required type="password" name="" id="password" onChange={handleChange} />
             <label className='label--password' htmlFor="password">password</label>
           </div>
-          {isLoading ? <Spinner /> :
-            <button className='btn btn--signin' type="submit">Sign in</button>}
-
+          {isLoading ? <Spinner content='checking...' /> :
+            <button className='btn btn--primary' type="submit">Sign in</button>}
         </form>
       </div>
       <div className="note note--signup">
         <p className="note--signup__p">Not registered? Create an account. It&apos;s free!</p>
-        <button onClick={() => props.history.push('/signup')} className="btn note--signup__button">Sign up</button>
+        <button onClick={() => props.history.push('/signup')} className="btn btn--primary">Sign up</button>
       </div>
     </div>
   );

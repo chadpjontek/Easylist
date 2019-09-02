@@ -16,6 +16,7 @@ const CreateList = lazy(() => import(/* webpackChunkName: "CreateList" */'./Crea
 const ViewLists = lazy(() => import(/* webpackChunkName: "ViewLists" */'./ViewLists'));
 const Donate = lazy(() => import(/* webpackChunkName: "Donate" */'./Donate'));
 const EditList = lazy(() => import(/* webpackChunkName: "EditList" */'./EditList'));
+const SharedList = lazy(() => import(/* webpackChunkName: "SharedList" */'./SharedList'));
 const List = lazy(() => import(/* webpackChunkName: "List" */'./List'));
 const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'));
 
@@ -41,8 +42,6 @@ const App = () => {
   };
   // Store location history
   const { location } = useRouter();
-  // Regex to detect edit route
-  const reEditRoute = /edit$/;
 
   // Create route page animations
   const transitions = useTransition(location, location => location.pathname, {
@@ -69,6 +68,7 @@ const App = () => {
                 <Route exact path="/lists" component={ViewLists} />
                 <Route path="/donate" component={Donate} />
                 <Route path="/lists/:name/edit" component={EditList} />
+                <Route path="/lists/:name/shared" component={SharedList} />
                 <Route path="/lists/:name" component={List} />
                 {/* when none of the above match, <NoMatch> will be rendered */}
                 <Route component={NoMatch} />
