@@ -245,15 +245,19 @@ const getSharedList = async (id) => {
   }
 };
 
+/**
+ * Post the queue of lists to Mongo
+ * @param {string} id - the id of the list calling this function
+ */
 const postQueue = async (id) => {
-  let updatedId;
+  let updatedId = id;
   try {
     // Open a IDB cursor and add the queue store into a temporary lists array
     let lists = [];
     let cursor = await (await idbPromise).transaction('queue').store.openCursor();
     if (!cursor) {
-      // queue is empty so return true
-      return true;
+      // queue is empty so return id
+      return id || true;
     }
     while (cursor) {
       lists.push(cursor.value);
@@ -275,20 +279,20 @@ const postQueue = async (id) => {
     }
 
     // Check the temp arr for create actions. For each create action, check if there are any lists
-    // with the same id. If there are, find the one with the most recent update and POST it. Then
-    // remove all those from temp arr.
+    // with the same id. If there are, find the one with the most recent update and POST it.
+    // After posting, update IDB with the new returned id. Then remove all those from temp arr.
     const createActions = lists.filter(list => list.action === 'create');
 
     for (const action of createActions) {
       const sameId = lists.filter(list => list._id === action._id);
-      if (sameId > 0) {
+      if (sameId.length > 1) {
         const mostRecent = sameId.reduce((acc, cur) => {
-          if (cur._id > acc._id) {
+          if (cur.updatedAt > acc.updatedAt) {
             return cur;
           }
         });
-
-        const { name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = mostRecent;
+        console.log(mostRecent);
+        const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = mostRecent;
         const listToCreate = { name, html, backgroundColor, notificationsOn, isPrivate, updatedAt };
         const result = await createExternalList(listToCreate);
         if (!result) {
@@ -297,14 +301,35 @@ const postQueue = async (id) => {
         if (action._id === id) {
           updatedId = result._id;
         }
+        await addListPromise({
+          _id: result._id,
+          name,
+          html,
+          notificationsOn,
+          backgroundColor,
+          isPrivate,
+          updatedAt
+        });
+        await deleteListPromise(_id);
         lists = lists.filter(list => list._id !== mostRecent._id);
       } else {
-        const { name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = action;
+        console.log(action);
+        const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = action;
         const listToCreate = { name, html, backgroundColor, notificationsOn, isPrivate, updatedAt };
         const result = await createExternalList(listToCreate);
         if (!result) {
           return false;
         }
+        await addListPromise({
+          _id: result._id,
+          name,
+          html,
+          notificationsOn,
+          backgroundColor,
+          isPrivate,
+          updatedAt
+        });
+        await deleteListPromise(_id);
         lists = lists.filter(list => list._id !== action._id);
       }
     }
@@ -314,7 +339,7 @@ const postQueue = async (id) => {
     const updateActions = lists.filter(list => list.action === 'update');
     for (const action of updateActions) {
       const sameId = lists.filter(list => list._id === action._id);
-      if (sameId > 0) {
+      if (sameId.length > 0) {
         const mostRecent = sameId.reduce((acc, cur) => {
           if (cur.updatedAt > acc.updatedAt) {
             return cur;

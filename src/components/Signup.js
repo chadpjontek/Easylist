@@ -19,7 +19,6 @@ const Signup = (props) => {
     document.title = 'Sign up';
   }, []);
 
-  //TODO: fix
   /**
    * Handle the form submit event
    * @param {Event} e - event object
