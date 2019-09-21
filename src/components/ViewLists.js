@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { getListsPromise } from '../helpers/dbhelper';
+import {
+  getListsPromise,
+  addListPromise,
+  updateListPromise,
+  deleteListPromise,
+  getExternalLists,
+  createExternalList,
+  updateExternalList,
+  syncData
+} from '../helpers/dbhelper';
 import '../styles/ViewLists.scss';
 
 
@@ -15,8 +24,11 @@ const ViewLists = (props) => {
     // ... fetch list data
     const fetchData = async () => {
       try {
-        const results = await getListsPromise();
-        setLists(results);
+        const idbLists = await getListsPromise();
+        setLists(idbLists);
+        // SYNC DATA
+        const syncedLists = await syncData(idbLists);
+        setLists(syncedLists);
       } catch (error) {
         throw new Error(error);
       }

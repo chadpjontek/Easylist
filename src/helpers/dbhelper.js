@@ -56,6 +56,40 @@ const addToQueue = async (item) => (await idbPromise).add('queue', item);
 // MONGODB REQUEST SECTION
 // =======================
 
+// Get all lists
+const getExternalLists = async () => {
+  try {
+    // grab jwt for user auth
+    const token = localStorage.getItem('jwt');
+    // If the user is offline or doesn't have a token just exit function
+    if (!window.navigator.onLine || !token) {
+      return;
+    }
+    const response = await fetch('http://localhost:3000/api/lists', {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-auth-token': token
+      },
+    });
+    // Parse body as json
+    const json = await response.json();
+    if (json.lists) {
+      // return the lists
+      return json.lists;
+    }
+    if (json.error) {
+      throw new Error(json.error);
+    }
+    // If no json returned throw error
+    throw new Error('No json error or lists response.');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 /**
 * Adds a list to MongoDB and returns the newly created list
 * @param {object} list - The list to be added
@@ -248,6 +282,7 @@ const getSharedList = async (id) => {
 /**
  * Post the queue of lists to Mongo
  * @param {string} id - the id of the list calling this function
+ * @returns false if error, otherwise true or the updated ID
  */
 const postQueue = async (id) => {
   let updatedId = id;
@@ -373,6 +408,53 @@ const postQueue = async (id) => {
   }
 };
 
+/**
+ * Syncs the list data between idb and mongo
+ * @param {array} idbLists - the array of lists on the local idb
+ * @returns the synced list array
+ */
+const syncData = async (idbLists) => {
+  // filter the idbLists so the local lists can be added to external DB
+  const localLists = idbLists.filter(list => /-/.test(list._id));
+  if (localLists.length > 0) {
+    // add lists to external DB
+    for (const list of localLists) {
+      // destructure list so the relevant data can be used to create the external list
+      const { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn } = list;
+      const listToCreate = { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
+      // get the newId of the list so it can be updated locally
+      const newList = await createExternalList(listToCreate);
+      // Update the local list with the newId
+      const updatedList = { _id: newList._id, updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
+      await addListPromise(updatedList);
+    }
+  }
+  // Get external lists
+  const externalLists = await getExternalLists();
+  // update any lists that are shared between local and external DBs
+  const sharedLists = idbLists.filter(list => !/-/.test(list._id));
+  if (sharedLists.length > 0) {
+    for (const list of sharedLists) {
+      // compare external list to local and update both DBs with most recent
+      const externalList = externalLists.find(exList => exList._id === list._id);
+      if (externalList !== undefined) {
+        if (externalList.updatedAt > list.updatedAt) {
+          // Update local db
+          await updateListPromise(externalList);
+        } else if (externalList.updatedAt < list.updatedAt) {
+          // Update external db
+          await updateExternalList(list);
+        }
+      } else {
+        // The external list is absent therefore it has been deleted. Delete it locally as well.
+        await deleteListPromise(list._id);
+      }
+    }
+  }
+  // Update local state for visual changes
+  return await getExternalLists();
+};
+
 export {
   addListPromise,
   getListPromise,
@@ -380,10 +462,12 @@ export {
   deleteListPromise,
   updateListPromise,
   addToQueue,
+  getExternalLists,
   createExternalList,
   updateExternalList,
   deleteExternalList,
   shareExternalList,
   getSharedList,
-  postQueue
+  postQueue,
+  syncData
 };
