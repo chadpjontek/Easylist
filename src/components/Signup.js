@@ -4,7 +4,7 @@ import usePopup from '../hooks/usePopup';
 import Spinner from './Spinner';
 import '../styles/Signin.scss';
 
-const Signup = (props) => {
+const SignUp = (props) => {
   // set/get state
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -113,4 +113,4 @@ const Signup = (props) => {
   );
 };
 
-export default Signup;
+export default SignUp;
