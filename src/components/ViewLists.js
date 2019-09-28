@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   getListsPromise,
-  addListPromise,
-  updateListPromise,
-  deleteListPromise,
-  getExternalLists,
-  createExternalList,
-  updateExternalList,
-  syncData
+  syncLists
 } from '../helpers/dbhelper';
 import '../styles/ViewLists.scss';
 
@@ -26,8 +20,10 @@ const ViewLists = (props) => {
       try {
         const idbLists = await getListsPromise();
         setLists(idbLists);
-        // SYNC DATA
-        const syncedLists = await syncData(idbLists);
+        const syncedLists = await syncLists(idbLists);
+        if (!syncedLists) {
+          return console.log('couldn\'t connect to Mongo');
+        }
         setLists(syncedLists);
       } catch (error) {
         throw new Error(error);

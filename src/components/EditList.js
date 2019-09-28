@@ -2,13 +2,9 @@ import React, { useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
-import Spinner from '../components/Spinner';
 import {
   getListPromise,
-  updateListPromise,
-  addToQueue,
-  updateExternalList,
-  postQueue
+  updateListPromise
 } from '../helpers/dbhelper';
 import bold from '../images/bold.svg';
 import pantone from '../images/pantone.svg';
@@ -35,7 +31,6 @@ const EditList = (props) => {
   const [selection, setSelection] = useState(undefined);
   const [url, setUrl] = useState('');
   const [isInvalidList, setisInvalidList] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
 
   // Get/set state of popup
@@ -56,6 +51,7 @@ const EditList = (props) => {
         setNotificationsOn(notificationsOn);
         setIsPrivate(isPrivate);
       } catch (error) {
+        document.title = 'list error';
         console.log(error);
         setisInvalidList(true);
         togglePopup('This list does not exist.');
@@ -276,28 +272,12 @@ const EditList = (props) => {
       updatedAt: Date.now()
     };
     try {
-      // Attempt to update list on MongoDB
-      setIsLoading(true);
-      let isUpdated;
-      const posted = await postQueue(_id);
-      if (posted) {
-        // make sure we have the id on the external db
-        updatedList._id = posted;
-        isUpdated = await updateExternalList(updatedList);
-      }
-      setIsLoading(false);
-      if (!isUpdated) {
-        // update failed so add update to queue
-        console.log('adding update action to queue');
-        await addToQueue({ ...updatedList, action: 'update' });
-      }
       // Update the list in IDB
       await updateListPromise(updatedList);
       // Redirect to list page
       props.history.push(`/lists/${_id}`, { _id });
     } catch (error) {
       togglePopup(error);
-      setIsLoading(false);
     }
   };
 
@@ -354,22 +334,16 @@ const EditList = (props) => {
               </button>
             </div>
             <div className="column">
-              {isLoading ?
-                <button className='btn btn-edit green'>
-                  <img src={save} alt="save list" />
-                </button>
-                :
-                <button className='btn btn-edit' onClick={saveList}>
-                  <img src={save} alt="save list" />
-                </button>
-              }
+              <button className='btn btn-edit' onClick={saveList}>
+                <img src={save} alt="save list" />
+              </button>
             </div>
           </div>
         </div>
       </div>
       <form style={showInput ? { visibility: 'visible' } : { visibility: 'hidden' }} onSubmit={handleSubmit}>
         <input id='inputText' type='text' required onChange={handleInputTextChange} value={url} />
-        <label htmlFor='input'>Enter URL or list name</label>
+        <label htmlFor='input'>Enter URL</label>
       </form>
       <ContentEditable
         className={`editbox ${backgroundColor}--note`}

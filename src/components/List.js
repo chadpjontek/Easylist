@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
-import { validateListName } from '../helpers';
+import ClipboardJS from 'clipboard';
+
 import {
   getListPromise,
   deleteListPromise,
-  addToQueue,
-  shareExternalList,
-  deleteExternalList,
-  postQueue
+  addToDeleteQueue,
+  shareExternalList
 } from '../helpers/dbhelper';
 import '../styles/List.scss';
 
@@ -17,12 +16,12 @@ const List = (props) => {
   const _id = decodeURI(window.location.pathname.split('/')[2]);
 
   // local state getters/setters
-  const [list, setList] = useState();
   const [name, setName] = useState('Loading...');
   const [html, setHtml] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
   const [isInvalidList, setisInvalidList] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [shareBtnState, setShareBtnState] = useState(false);
+  const [deleteBtnDisabled, setDeleteBtnDisabled] = useState(false);
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -31,18 +30,23 @@ const List = (props) => {
   useEffect(() => {
     // ...fetch list
     const fetchData = async () => {
+      new ClipboardJS('#share');
       try {
-        const list = await getListPromise(_id);
-        const { name, html, backgroundColor } = list;
+        const idbList = await getListPromise(_id);
+        if (idbList === undefined) {
+          throw new Error('list does not exist');
+        }
+        const { name, html, backgroundColor } = idbList;
         // ...update title
         document.title = name;
-        setList(list);
         setName(name);
         setHtml(html);
         setBackgroundColor(backgroundColor);
       } catch (error) {
         document.title = 'list error';
-        throw new Error(error);
+        console.log(error);
+        setisInvalidList(true);
+        togglePopup('This list does not exist.');
       }
     };
     fetchData();
@@ -51,47 +55,40 @@ const List = (props) => {
   // Function to delete a list
   const deleteList = async () => {
     try {
-      // Attempt to delete list on MongoDB
-      setIsLoading(true);
-      let isDeleted;
-      const posted = await postQueue(_id);
-      if (posted) {
-        isDeleted = await deleteExternalList(_id);
-      }
-      setIsLoading(false);
-      if (!isDeleted) {
-        // delete failed so add delete to queue
-        console.log('adding delete action to queue');
-        await addToQueue({ ...list, action: 'delete' });
+      // if list is not local only, add to deleteQueue
+      if (!/-/.test(_id)) {
+        await addToDeleteQueue({ _id });
       }
       // Delete the list in IDB
       await deleteListPromise(_id);
       // redirect to lists page
       props.history.push('/lists');
     } catch (error) {
+      setDeleteBtnDisabled(false);
       togglePopup(error);
-      setIsLoading(false);
     }
   };
 
   // Function to share a list
   const shareList = async () => {
     try {
-      // Attempt to update list on MongoDB
-      setIsLoading(true);
-      await postQueue();
-      const response = await shareExternalList(_id);
-      setIsLoading(false);
-      if (!response) {
-        // share failed
-        return togglePopup('You need to be online and signed in to share a list');
+      const errMsg = 'You need to be online and signed in to share a list';
+      if (/-/.test(_id)) {
+        throw new Error(errMsg);
       }
-      // TODO: create url where list can be viewed publicly and copy link to clipboard
-      // Display popup msg
-      return togglePopup(response);
+      // Attempt to update list on MongoDB
+      setShareBtnState(true);
+      const response = await shareExternalList(_id);
+      setShareBtnState(false);
+      console.log(response);
+      if (!response) {
+        togglePopup(errMsg);
+      } else {
+        togglePopup(response.msg);
+      }
     } catch (error) {
+      setShareBtnState(false);
       togglePopup(error);
-      setIsLoading(false);
     }
   };
 
@@ -121,8 +118,8 @@ const List = (props) => {
       <div className="list-header">
         <h1 className='h1'>{name}</h1>
         <button className='btn btn--list btn--edit' onClick={editList}>edit</button>
-        <button className='btn btn--list btn--share' onClick={shareList}>share</button>
-        <button className='btn btn--list btn--delete' onClick={deleteList}>delete</button>
+        <button id='share' className='btn btn--list btn--share' disabled={shareBtnState} onClick={shareList} data-clipboard-text={`http://localhost:3000/api/lists/${_id}/copy`}>share</button>
+        <button className='btn btn--list btn--delete' disabled={deleteBtnDisabled} onClick={deleteList}>delete</button>
       </div>
       <div className={`editbox ${backgroundColor}--note`} dangerouslySetInnerHTML={{ __html: html }}></div>
     </div >

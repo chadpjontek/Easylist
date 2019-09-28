@@ -10,11 +10,36 @@ const idbPromise = openDB('easylist', 1, {
       keyPath: '_id'
     });
 
-    db.createObjectStore('queue', {
-      autoIncrement: true
+    db.createObjectStore('deleteQueue', {
+      keyPath: '_id'
+    });
+
+    db.createObjectStore('tokens', {
+      keyPath: 'createdAt'
     });
   }
 });
+
+/**
+ * Returns a promise that clears all tokens from the token store
+ */
+const clearTokens = async () => (await idbPromise).clear('tokens');
+
+/**
+ * Returns a promise that clears all ids from the deleteQueue store
+ */
+const clearQueue = async () => (await idbPromise).clear('deleteQueue');
+
+/**
+ * Returns a promise that adds a JWT to the token store
+ * @param {object} token - the token object
+ */
+const addToken = async (token) => (await idbPromise).add('tokens', token);
+
+/**
+ * Returns a promise that gets the tokens from the token store
+ */
+const getTokens = async () => (await idbPromise).getAll('tokens');
 
 /**
  * Returns a promise that gets all lists from indexedDB
@@ -46,24 +71,45 @@ const updateListPromise = async (list) => (await idbPromise).put('lists', list);
 const deleteListPromise = async (_id) => (await idbPromise).delete('lists', _id);
 
 /**
- * Returns a promise that adds an item to a queue
- * @param {object} item - The item to be queued
+ * Returns a promise that adds a _id to a queue to be deleted
+ * @param {object} item - The _id to be queued for deletion
  */
-const addToQueue = async (item) => (await idbPromise).add('queue', item);
+const addToDeleteQueue = async (_id) => (await idbPromise).put('deleteQueue', _id);
 
 
 // =======================
 // MONGODB REQUEST SECTION
 // =======================
 
+/**
+ * @returns a token or false
+ */
+const getToken = async () => {
+  try {
+    // make sure the user is online and has an up to date token
+    const tokenArr = await getTokens();
+    if (!tokenArr || tokenArr.length < 1) {
+      return false;
+    }
+    if (tokenArr[0] && (Date.now() - tokenArr[0].createdAt) > 86400000) {
+      await clearTokens();
+      return false;
+    }
+    if (!window.navigator.onLine) {
+      return false;
+    }
+    return tokenArr[0].token;
+  } catch (error) {
+    return false;
+  }
+};
+
 // Get all lists
 const getExternalLists = async () => {
   try {
-    // grab jwt for user auth
-    const token = localStorage.getItem('jwt');
-    // If the user is offline or doesn't have a token just exit function
-    if (!window.navigator.onLine || !token) {
-      return;
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
     }
     const response = await fetch('http://localhost:3000/api/lists', {
       mode: 'cors',
@@ -85,6 +131,37 @@ const getExternalLists = async () => {
     // If no json returned throw error
     throw new Error('No json error or lists response.');
   } catch (error) {
+    throw error;
+  }
+};
+
+// Get a specific list
+const getExternalList = async (id) => {
+  try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
+    }
+    const response = await fetch(`http://localhost:3000/api/lists/${id}`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-auth-token': token
+      },
+    });
+    // Parse body as json
+    const json = await response.json();
+    if (json.list) {
+      // return the list
+      return json.list;
+    }
+    if (json.error) {
+      throw new Error(json.error);
+    }
+    // If no json returned throw error
+    throw new Error('No json error or list response.');
+  } catch (error) {
     console.log(error);
   }
 };
@@ -96,11 +173,9 @@ const getExternalLists = async () => {
 */
 const createExternalList = async (list) => {
   try {
-    // grab jwt for user auth
-    const token = localStorage.getItem('jwt');
-    // If the user is offline or doesn't have a token just exit function
-    if (!window.navigator.onLine || !token) {
-      return;
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
     }
     const response = await fetch('http://localhost:3000/api/lists', {
       body: JSON.stringify(list),
@@ -132,14 +207,12 @@ const createExternalList = async (list) => {
    * @param {object} list - The list to update to MongoDB
    */
 const updateExternalList = async (list) => {
-  const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = list;
-  // get the jwt for auth
-  const token = localStorage.getItem('jwt');
-  // If the user is offline or doesn't have a token just exit function
-  if (!window.navigator.onLine || !token) {
-    return false;
-  }
   try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
+    }
+    const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = list;
     const response = await fetch(`http://localhost:3000/api/lists/${_id}`, {
       body: JSON.stringify({ name, html, backgroundColor, notificationsOn, isPrivate, updatedAt }),
       mode: 'cors',
@@ -171,13 +244,11 @@ const updateExternalList = async (list) => {
    * @param {string} _id - The _id of the list to delete from MongoDB
    */
 const deleteExternalList = async (_id) => {
-  // get the jwt for auth
-  const token = localStorage.getItem('jwt');
-  // If the user is offline or doesn't have a token just exit function
-  if (!window.navigator.onLine || !token) {
-    return false;
-  }
   try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
+    }
     // send request to delete list
     const response = await fetch(`http://localhost:3000/api/lists/${_id}`, {
       mode: 'cors',
@@ -209,13 +280,11 @@ const deleteExternalList = async (_id) => {
    * @param {object} list - The _id of the list
    */
 const shareExternalList = async (_id) => {
-  // get the jwt for auth
-  const token = localStorage.getItem('jwt');
-  // If the user is offline or doesn't have a token just exit function
-  if (!window.navigator.onLine || !token) {
-    return false;
-  }
   try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
+    }
     const response = await fetch(`http://localhost:3000/api/lists/${_id}/share`, {
       mode: 'cors',
       method: 'PUT',
@@ -226,9 +295,9 @@ const shareExternalList = async (_id) => {
     });
     // Parse body as json
     const json = await response.json();
-    if (json.msg) {
+    if (json.msg && json.link) {
       // successful save
-      return json.msg;
+      return json;
     }
     if (json.error) {
       throw new Error(json.error);
@@ -247,11 +316,9 @@ const shareExternalList = async (_id) => {
  */
 const getSharedList = async (id) => {
   try {
-    // grab jwt for user auth
-    const token = localStorage.getItem('jwt');
-    // If the user is offline or doesn't have a token just exit function
-    if (!window.navigator.onLine || !token) {
-      return;
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
     }
     const response = await fetch(`http://localhost:3000/api/lists/${id}/copy`, {
       body: JSON.stringify({ _id: id }),
@@ -280,127 +347,37 @@ const getSharedList = async (id) => {
 };
 
 /**
- * Post the queue of lists to Mongo
- * @param {string} id - the id of the list calling this function
- * @returns false if error, otherwise true or the updated ID
+ * Delete the queue of lists from Mongo
+ * @returns bool
  */
-const postQueue = async (id) => {
-  let updatedId = id;
+const deleteQueue = async () => {
   try {
-    // Open a IDB cursor and add the queue store into a temporary lists array
-    let lists = [];
-    let cursor = await (await idbPromise).transaction('queue').store.openCursor();
+    // Open a IDB cursor and delete each list from Mongo by id. Then delete from queue.
+
+    let cursor = await (await idbPromise).transaction('deleteQueue').store.openCursor();
     if (!cursor) {
-      // queue is empty so return id
-      return id || true;
+      // queue is empty so return success
+      return true;
     }
+    let ids = [];
     while (cursor) {
-      lists.push(cursor.value);
+      ids.push(cursor.value);
       cursor = await cursor.continue();
+      // const id = cursor.value._id;
+      // const isDeleted = await deleteExternalList(id);
+      // if (!isDeleted) throw new Error('Delete failed');
+      // await cursor.delete();
+      // cursor = await cursor.continue();
     }
-
-    // Check the temp arr for delete actions. For each delete action, get the id of the list to be
-    // deleted, then delete all other items in temp arr with that id. Then DELETE it.
-    const deleteActions = lists.filter(list => list.action === 'delete');
-    for (const action of deleteActions) {
-      lists = lists.filter(list => list._id !== action._id);
-      // check with regex if the delete reqest is a local id - ignore if it is
-      if (!/-/.test(action._id)) {
-        const result = await deleteExternalList(action._id);
-        if (!result) {
-          return false;
+    if (ids.length > 0) {
+      for (const id of ids) {
+        const isDeleted = await deleteExternalList(id._id);
+        if (!isDeleted) {
+          throw new Error('Could not delete external list');
         }
       }
     }
-
-    // Check the temp arr for create actions. For each create action, check if there are any lists
-    // with the same id. If there are, find the one with the most recent update and POST it.
-    // After posting, update IDB with the new returned id. Then remove all those from temp arr.
-    const createActions = lists.filter(list => list.action === 'create');
-
-    for (const action of createActions) {
-      const sameId = lists.filter(list => list._id === action._id);
-      if (sameId.length > 1) {
-        const mostRecent = sameId.reduce((acc, cur) => {
-          if (cur.updatedAt > acc.updatedAt) {
-            return cur;
-          }
-        });
-        console.log(mostRecent);
-        const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = mostRecent;
-        const listToCreate = { name, html, backgroundColor, notificationsOn, isPrivate, updatedAt };
-        const result = await createExternalList(listToCreate);
-        if (!result) {
-          return false;
-        }
-        if (action._id === id) {
-          updatedId = result._id;
-        }
-        await addListPromise({
-          _id: result._id,
-          name,
-          html,
-          notificationsOn,
-          backgroundColor,
-          isPrivate,
-          updatedAt
-        });
-        await deleteListPromise(_id);
-        lists = lists.filter(list => list._id !== mostRecent._id);
-      } else {
-        console.log(action);
-        const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = action;
-        const listToCreate = { name, html, backgroundColor, notificationsOn, isPrivate, updatedAt };
-        const result = await createExternalList(listToCreate);
-        if (!result) {
-          return false;
-        }
-        await addListPromise({
-          _id: result._id,
-          name,
-          html,
-          notificationsOn,
-          backgroundColor,
-          isPrivate,
-          updatedAt
-        });
-        await deleteListPromise(_id);
-        lists = lists.filter(list => list._id !== action._id);
-      }
-    }
-
-    // Check the temp arr for update actions. For each update action, find the most recent update
-    // for that id and PUT it. Remove the others from the temp arr.
-    const updateActions = lists.filter(list => list.action === 'update');
-    for (const action of updateActions) {
-      const sameId = lists.filter(list => list._id === action._id);
-      if (sameId.length > 0) {
-        const mostRecent = sameId.reduce((acc, cur) => {
-          if (cur.updatedAt > acc.updatedAt) {
-            return cur;
-          }
-        });
-        const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = mostRecent;
-        const listToUpdate = { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt };
-        const result = await updateExternalList(listToUpdate);
-        if (!result) {
-          return false;
-        }
-        lists = lists.filter(list => list._id !== mostRecent._id);
-      }
-    }
-
-    // Delete all items in the queue
-    cursor = await (await idbPromise).transaction('queue', 'readwrite').store.openCursor();
-    while (cursor) {
-      console.log(`removing ${cursor.key} from queue`);
-      await cursor.delete();
-      cursor = await cursor.continue();
-    }
-
-    // queue has been posted and all items removed so return the updated id of the calling
-    return updatedId || true;
-
+    await clearQueue();
   } catch (error) {
     console.log(error);
     // something went wrong so return false
@@ -413,46 +390,73 @@ const postQueue = async (id) => {
  * @param {array} idbLists - the array of lists on the local idb
  * @returns the synced list array
  */
-const syncData = async (idbLists) => {
-  // filter the idbLists so the local lists can be added to external DB
-  const localLists = idbLists.filter(list => /-/.test(list._id));
-  if (localLists.length > 0) {
-    // add lists to external DB
-    for (const list of localLists) {
-      // destructure list so the relevant data can be used to create the external list
-      const { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn } = list;
-      const listToCreate = { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
-      // get the newId of the list so it can be updated locally
-      const newList = await createExternalList(listToCreate);
-      // Update the local list with the newId
-      const updatedList = { _id: newList._id, updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
-      await addListPromise(updatedList);
+const syncLists = async (idbLists) => {
+  try {
+    const token = await getToken();
+    if (!token) {
+      throw Error('no token');
     }
-  }
-  // Get external lists
-  const externalLists = await getExternalLists();
-  // update any lists that are shared between local and external DBs
-  const sharedLists = idbLists.filter(list => !/-/.test(list._id));
-  if (sharedLists.length > 0) {
-    for (const list of sharedLists) {
-      // compare external list to local and update both DBs with most recent
-      const externalList = externalLists.find(exList => exList._id === list._id);
-      if (externalList !== undefined) {
-        if (externalList.updatedAt > list.updatedAt) {
-          // Update local db
-          await updateListPromise(externalList);
-        } else if (externalList.updatedAt < list.updatedAt) {
-          // Update external db
-          await updateExternalList(list);
-        }
-      } else {
-        // The external list is absent therefore it has been deleted. Delete it locally as well.
+    await deleteQueue();
+    // filter the idbLists so the local lists can be added to external DB
+    const localLists = idbLists.filter(list => /-/.test(list._id));
+    if (localLists.length > 0) {
+      // add lists to external DB
+      for (const list of localLists) {
+        // destructure list so the relevant data can be used to create the external list
+        const { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn } = list;
+        const listToCreate = { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
+        // get the newId of the list so it can be updated locally
+        const newList = await createExternalList(listToCreate);
+        // Update the local list with the newId
+        const updatedList = { _id: newList._id, updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
+        await addListPromise(updatedList);
         await deleteListPromise(list._id);
       }
     }
+    // Get external lists
+    const externalLists = await getExternalLists();
+    const updatedExternalLists = Array.from(externalLists);
+    // update any lists that are shared between local and external DBs
+    const sharedLists = idbLists.filter(list => !/-/.test(list._id));
+    if (sharedLists.length > 0) {
+      for (const list of sharedLists) {
+        // compare external list to local and update both DBs with most recent
+        const externalList = externalLists.find(exList => exList._id === list._id);
+        if (externalList !== undefined) {
+          if (Date.parse(externalList.updatedAt) > list.updatedAt) {
+            // Update local db
+            await updateListPromise(externalList);
+          } else if (Date.parse(externalList.updatedAt) < list.updatedAt) {
+            // Update external db
+            await updateExternalList(list);
+            const foundIndex = updatedExternalLists.findIndex(x => x._id == list._id);
+            updatedExternalLists[foundIndex] = list;
+          }
+        } else {
+          // The external list is absent therefore it has been deleted. Delete it locally as well.
+          await deleteListPromise(list._id);
+        }
+      }
+    }
+    // Add external only lists to IDB
+    const updatedLocalLists = await getListsPromise();
+    if (updatedExternalLists
+      && updatedLocalLists.length > 0
+      && updatedExternalLists.length > updatedLocalLists.length) {
+      // filter out the local lists from the external
+      const externalOnlyLists = updatedExternalLists.filter(({ _id: id1 }) =>
+        !updatedLocalLists.some(({ _id: id2 }) => id2 === id1));
+      console.log(updatedLocalLists);
+      for (const list of externalOnlyLists) {
+        console.log(list);
+        await addListPromise(list);
+      }
+    }
+    // Return the updated lists
+    return updatedExternalLists;
+  } catch (error) {
+    console.log(error);
   }
-  // Update local state for visual changes
-  return await getExternalLists();
 };
 
 export {
@@ -461,13 +465,10 @@ export {
   getListsPromise,
   deleteListPromise,
   updateListPromise,
-  addToQueue,
-  getExternalLists,
-  createExternalList,
-  updateExternalList,
-  deleteExternalList,
+  addToDeleteQueue,
   shareExternalList,
   getSharedList,
-  postQueue,
-  syncData
+  syncLists,
+  clearTokens,
+  addToken
 };

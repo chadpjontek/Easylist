@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
 import Spinner from '../components/Spinner';
+import { clearTokens, addToken } from '../helpers/dbhelper';
 import '../styles/Signin.scss';
 
 const SignIn = (props) => {
@@ -47,8 +48,10 @@ const SignIn = (props) => {
         // Parse body as json
         const json = await response.json();
         if (json.token) {
-          // Put JWT in localStorage for future authentication
-          localStorage.setItem('jwt', json.token);
+          // Delete other tokens from IDB
+          await clearTokens();
+          // Put JWT in token store
+          await addToken({ createdAt: Date.now(), token: json.token });
           // Notify user of successful signin
           setIsLoading(false);
           togglePopup('Successful sign in!');
