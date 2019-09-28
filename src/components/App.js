@@ -11,7 +11,7 @@ import '../styles/App.scss';
 // lazy load routes
 const Home = lazy(() => import(/* webpackChunkName: "Home" */'./Home'));
 const SignIn = lazy(() => import(/* webpackChunkName: "SignIn" */'./SignIn'));
-const SignUp = lazy(() => import(/* webpackChunkName: "SignIn" */'./SignUp'));
+const SignUp = lazy(() => import(/* webpackChunkName: "SignUp" */'./SignUp'));
 const CreateList = lazy(() => import(/* webpackChunkName: "CreateList" */'./CreateList'));
 const ViewLists = lazy(() => import(/* webpackChunkName: "ViewLists" */'./ViewLists'));
 const Donate = lazy(() => import(/* webpackChunkName: "Donate" */'./Donate'));
