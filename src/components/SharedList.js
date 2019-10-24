@@ -6,10 +6,7 @@ import usePopup from '../hooks/usePopup';
 const SharedList = (props) => {
   // get _id from location
   const id = decodeURI(window.location.pathname.split('/')[2]);
-
-  // get/set local state
-  const [isLoading, setIsLoading] = useState(false);
-  const [list, setList] = useState(false);
+  console.log(id);
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -19,21 +16,22 @@ const SharedList = (props) => {
     // ...fetch list
     const fetchData = async () => {
       try {
-        setIsLoading(true);
         const listCopy = await getSharedList(id);
-        setIsLoading(false);
         if (!listCopy) {
           // something went wrong so return error
           togglePopup('Something went wrong. The list may no longer exist or is no longer shared. Make sure you are signed in.');
           document.title = 'list error';
         } else {
           console.log('list found!');
-          setList(listCopy);
-          // ...update title
-          document.title = listCopy.name;
+          // redirect with new list copy
+          setTimeout(() => props.history.push({
+            pathname: `/lists/${id}/edit`,
+            state: { list: listCopy }
+          }), 1500
+          );
         }
       } catch (error) {
-        setIsLoading(false);
+        // setIsLoading(false);
         document.title = 'list error';
         throw new Error(error);
       }
@@ -41,24 +39,15 @@ const SharedList = (props) => {
     fetchData();
   }, []);
 
-  return (!list ?
-    <div className="container">
+  return (
+    <div className='container view-list'>
       <Popup
         isShowing={isShowingPopup}
         text={message}
         hide={togglePopup} >
       </Popup >
-      {isLoading ? <h1>Loading...</h1> : null}
-    </div>
-    :
-    (
-      <Redirect
-        to={{
-          pathname: '/',
-          state: { from: props.location }
-        }}
-      />
-    )
+      <h1 className='h1'>Loading...</h1>
+    </div >
   );
 };
 

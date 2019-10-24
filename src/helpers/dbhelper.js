@@ -316,17 +316,11 @@ const shareExternalList = async (_id) => {
  */
 const getSharedList = async (id) => {
   try {
-    const token = await getToken();
-    if (!token) {
-      throw new Error('no token');
-    }
     const response = await fetch(`http://localhost:3000/api/lists/${id}/copy`, {
-      body: JSON.stringify({ _id: id }),
       mode: 'cors',
-      method: 'POST',
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'x-auth-token': token
+        'Content-Type': 'application/json; charset=utf-8'
       },
     });
     // Parse body as json
@@ -403,12 +397,12 @@ const syncLists = async (idbLists) => {
       // add lists to external DB
       for (const list of localLists) {
         // destructure list so the relevant data can be used to create the external list
-        const { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn } = list;
-        const listToCreate = { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
+        const { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn, isFinished, copiedFrom } = list;
+        const listToCreate = { updatedAt, name, html, backgroundColor, isPrivate, notificationsOn, isFinished, copiedFrom };
         // get the newId of the list so it can be updated locally
         const newList = await createExternalList(listToCreate);
         // Update the local list with the newId
-        const updatedList = { _id: newList._id, updatedAt, name, html, backgroundColor, isPrivate, notificationsOn };
+        const updatedList = { _id: newList._id, updatedAt, name, html, backgroundColor, isPrivate, notificationsOn, isFinished, copiedFrom };
         await addListPromise(updatedList);
         await deleteListPromise(list._id);
       }

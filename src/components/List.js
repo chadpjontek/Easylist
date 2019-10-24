@@ -22,6 +22,7 @@ const List = (props) => {
   const [isInvalidList, setisInvalidList] = useState(false);
   const [shareBtnState, setShareBtnState] = useState(false);
   const [deleteBtnDisabled, setDeleteBtnDisabled] = useState(false);
+  const [copied, setCopied] = useState('');
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -36,12 +37,13 @@ const List = (props) => {
         if (idbList === undefined) {
           throw new Error('list does not exist');
         }
-        const { name, html, backgroundColor } = idbList;
+        const { name, html, backgroundColor, copiedFrom } = idbList;
         // ...update title
         document.title = name;
         setName(name);
         setHtml(html);
         setBackgroundColor(backgroundColor);
+        setCopied(copiedFrom);
       } catch (error) {
         document.title = 'list error';
         console.log(error);
@@ -74,7 +76,8 @@ const List = (props) => {
     try {
       const errMsg = 'You need to be online and signed in to share a list';
       if (/-/.test(_id)) {
-        throw new Error(errMsg);
+        togglePopup(errMsg);
+        return;
       }
       // Attempt to update list on MongoDB
       setShareBtnState(true);
@@ -91,6 +94,12 @@ const List = (props) => {
       togglePopup(error);
     }
   };
+
+  const completeTask = () => {
+    // TODO:
+    console.log('task completed!');
+  };
+
 
   // Function to edit a list
   const editList = () => {
@@ -118,7 +127,11 @@ const List = (props) => {
       <div className="list-header">
         <h1 className='h1'>{name}</h1>
         <button className='btn btn--list btn--edit' onClick={editList}>edit</button>
-        <button id='share' className='btn btn--list btn--share' disabled={shareBtnState} onClick={shareList} data-clipboard-text={`http://localhost:3000/api/lists/${_id}/copy`}>share</button>
+        {copied ?
+          <button className='btn btn--list btn--complete' disabled={shareBtnState} onClick={completeTask}>complete</button>
+          :
+          <button id='share' className='btn btn--list btn--share' disabled={shareBtnState} onClick={shareList} data-clipboard-text={`http://localhost:8080/lists/${_id}/shared`}>share</button>
+        }
         <button className='btn btn--list btn--delete' disabled={deleteBtnDisabled} onClick={deleteList}>delete</button>
       </div>
       <div className={`editbox ${backgroundColor}--note`} dangerouslySetInnerHTML={{ __html: html }}></div>

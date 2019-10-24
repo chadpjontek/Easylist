@@ -83,6 +83,14 @@
   }
 }
 
+.btn--complete{
+  background: $green;
+
+  &:active {
+    box-shadow: $green-hover;
+  }
+}
+
 .btn--delete{
   background: $red;
 
@@ -101,6 +109,10 @@
 
   .btn--share:hover {
     box-shadow: $purple-hover
+  }
+
+  .btn--complete:hover {
+    box-shadow: $green-hover
   }
 
   .btn--delete:hover {
