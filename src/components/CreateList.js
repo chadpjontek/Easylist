@@ -37,7 +37,9 @@ const CreateList = (props) => {
         html: '<ul><li><br></li></ul>',
         backgroundColor: 'blue',
         isPrivate: true,
-        notificationsOn: false
+        notificationsOn: false,
+        copiedFrom: '',
+        isFinished: false
       };
       // Try to add list to indexedDB and redirect to edit page
       await addListPromise(list);

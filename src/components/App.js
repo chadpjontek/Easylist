@@ -18,6 +18,7 @@ const Donate = lazy(() => import(/* webpackChunkName: "Donate" */'./Donate'));
 const EditList = lazy(() => import(/* webpackChunkName: "EditList" */'./EditList'));
 const SharedList = lazy(() => import(/* webpackChunkName: "SharedList" */'./SharedList'));
 const List = lazy(() => import(/* webpackChunkName: "List" */'./List'));
+const ListCopy = lazy(() => import(/* webpackChunkName: "ListCopy" */'./ListCopy'));
 const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'));
 
 
@@ -64,11 +65,12 @@ const App = () => {
                 <Route exact path="/" component={Home} />
                 <Route path='/signin' component={SignIn} />
                 <Route path='/signup' component={SignUp} />
-                <Route exact path="/lists/create" component={CreateList} />
+                <Route path="/lists/create" component={CreateList} />
                 <Route exact path="/lists" component={ViewLists} />
                 <Route path="/donate" component={Donate} />
                 <Route path="/lists/:name/edit" component={EditList} />
                 <Route path="/lists/:name/shared" component={SharedList} />
+                <Route path="/lists/:name/copy" component={ListCopy} />
                 <Route path="/lists/:name" component={List} />
                 {/* when none of the above match, <NoMatch> will be rendered */}
                 <Route component={NoMatch} />

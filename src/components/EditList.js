@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import ContentEditable from 'react-contenteditable';
-import uuid from 'uuid/v1';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
 import {
+  getToken,
   getListPromise,
-  updateListPromise
+  addListPromise,
+  deleteListPromise,
+  updateListPromise,
+  createExternalList,
+  updateExternalList
 } from '../helpers/dbhelper';
 import bold from '../images/bold.svg';
 import pantone from '../images/pantone.svg';
@@ -17,8 +21,6 @@ import save from '../images/save-icon.svg';
 import '../styles/EditList.scss';
 
 const EditList = (props) => {
-  // Get any previous list state from react router
-  const { list } = props.location.state;
   // local state getters/setters
   const [isOl, setIsOl] = useState(false);
   const [isBold, setIsBold] = useState(false);
@@ -34,7 +36,7 @@ const EditList = (props) => {
   const [url, setUrl] = useState('');
   const [isInvalidList, setisInvalidList] = useState(false);
   const [name, setName] = useState('');
-  const [id, setId] = useState(decodeURI(window.location.pathname.split('/')[2]));
+  const id = decodeURI(window.location.pathname.split('/')[2]);
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -46,22 +48,6 @@ const EditList = (props) => {
     const fetchData = async () => {
       try {
         const listPromise = await getListPromise(id);
-        console.log(listPromise);
-        // check and see if the shared list is the current user's list
-        if (list && !listPromise) {
-          // ...update title
-          document.title = `Edit ${list.name}`;
-          // ...update list state
-          setName(list.name);
-          setHtml(list.html);
-          setBackgroundColor(list.backgroundColor);
-          setNotificationsOn(list.notificationsOn);
-          setIsPrivate(list.isPrivate);
-          setIsFinished(list.isFinished);
-          setCopiedFrom(list.copiedFrom);
-          setId(uuid());
-          return;
-        }
         // ...update title
         document.title = `Edit ${name}`;
         // ...update list state
@@ -70,6 +56,8 @@ const EditList = (props) => {
         setBackgroundColor(listPromise.backgroundColor);
         setNotificationsOn(listPromise.notificationsOn);
         setIsPrivate(listPromise.isPrivate);
+        setIsFinished(listPromise.isFinished);
+        setCopiedFrom(listPromise.copiedFrom);
       } catch (error) {
         document.title = 'list error';
         console.log(error);
@@ -294,10 +282,25 @@ const EditList = (props) => {
       isFinished
     };
     try {
-      // Update the list in IDB
-      await updateListPromise(updatedList);
+      // If the user is logged in, try to update the list on Mongo as well
+      const isLoggedIn = await getToken();
+      if (isLoggedIn) {
+        // If list is local only create a new list otherwise update existing
+        if (/-/.test(id)) {
+          const newlyCreatedList = await createExternalList(updatedList);
+          updatedList._id = newlyCreatedList._id;
+          await deleteListPromise(id);
+          await addListPromise(newlyCreatedList);
+        } else {
+          await updateExternalList(updatedList);
+          await updateListPromise(updatedList);
+        }
+      } else {
+        // Update the list in IDB
+        await updateListPromise(updatedList);
+      }
       // Redirect to list page
-      props.history.push(`/lists/${id}`, { _id: id });
+      props.history.push(`/lists/${updatedList._id}`, { _id: updatedList._id });
     } catch (error) {
       togglePopup(error);
     }

@@ -91,6 +91,15 @@
   }
 }
 
+.btn--save{
+  grid-column: 2/3;
+  background: $green;
+
+  &:active {
+    box-shadow: $green-hover;
+  }
+}
+
 .btn--delete{
   background: $red;
 

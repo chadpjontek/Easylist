@@ -25,7 +25,7 @@ const SharedList = (props) => {
           console.log('list found!');
           // redirect with new list copy
           setTimeout(() => props.history.push({
-            pathname: `/lists/${id}/edit`,
+            pathname: `/lists/${id}/copy`,
             state: { list: listCopy }
           }), 1500
           );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   getListsPromise,
+  updateListPromise,
   syncLists
 } from '../helpers/dbhelper';
 import '../styles/ViewLists.scss';
@@ -20,9 +21,12 @@ const ViewLists = (props) => {
       try {
         const idbLists = await getListsPromise();
         setLists(idbLists);
-        const syncedLists = await syncLists(idbLists);
+        const syncedLists = await syncLists();
         if (!syncedLists) {
           return console.log('couldn\'t connect to Mongo');
+        }
+        for (const i of syncedLists) {
+          await updateListPromise(i);
         }
         setLists(syncedLists);
       } catch (error) {

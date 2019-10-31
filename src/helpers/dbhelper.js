@@ -212,9 +212,9 @@ const updateExternalList = async (list) => {
     if (!token) {
       throw new Error('no token');
     }
-    const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt } = list;
+    const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt, isFinished, copiedFrom } = list;
     const response = await fetch(`http://localhost:3000/api/lists/${_id}`, {
-      body: JSON.stringify({ name, html, backgroundColor, notificationsOn, isPrivate, updatedAt }),
+      body: JSON.stringify({ name, html, backgroundColor, notificationsOn, isPrivate, updatedAt, isFinished, copiedFrom }),
       mode: 'cors',
       method: 'PUT',
       headers: {
@@ -262,9 +262,14 @@ const deleteExternalList = async (_id) => {
     const json = await response.json();
     if (json.msg) {
       // successful delete
-      return true;
+      return json.msg;
     }
     if (json.error) {
+      // If the list is not on Mongo it must already have been deleted so just return the error
+      if (json.error === 'No list found with this id.') {
+        return json.error;
+      }
+      // Throw on some other error
       throw new Error(json.error);
     }
     // If no json returned throw error
@@ -340,6 +345,35 @@ const getSharedList = async (id) => {
   }
 };
 
+const completeList = async (id) => {
+  try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('no token');
+    }
+    const response = await fetch(`http://localhost:3000/api/lists/${id}/complete`, {
+      mode: 'cors',
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-auth-token': token
+      },
+    });
+    // Parse body as json
+    const json = await response.json();
+    if (json.list) {
+      return json.list;
+    }
+    if (json.error) {
+      throw new Error(json.error);
+    }
+    // If no json returned throw error
+    throw new Error('No json error or response.');
+  } catch (error) {
+    throw Error(error);
+  }
+};
+
 /**
  * Delete the queue of lists from Mongo
  * @returns bool
@@ -381,16 +415,16 @@ const deleteQueue = async () => {
 
 /**
  * Syncs the list data between idb and mongo
- * @param {array} idbLists - the array of lists on the local idb
  * @returns the synced list array
  */
-const syncLists = async (idbLists) => {
+const syncLists = async () => {
   try {
     const token = await getToken();
     if (!token) {
       throw Error('no token');
     }
     await deleteQueue();
+    const idbLists = await getListsPromise();
     // filter the idbLists so the local lists can be added to external DB
     const localLists = idbLists.filter(list => /-/.test(list._id));
     if (localLists.length > 0) {
@@ -454,14 +488,19 @@ const syncLists = async (idbLists) => {
 };
 
 export {
+  getToken,
   addListPromise,
   getListPromise,
   getListsPromise,
   deleteListPromise,
   updateListPromise,
   addToDeleteQueue,
+  createExternalList,
+  updateExternalList,
+  deleteExternalList,
   shareExternalList,
   getSharedList,
+  completeList,
   syncLists,
   clearTokens,
   addToken

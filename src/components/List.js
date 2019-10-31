@@ -6,8 +6,10 @@ import ClipboardJS from 'clipboard';
 import {
   getListPromise,
   deleteListPromise,
+  updateListPromise,
   addToDeleteQueue,
-  shareExternalList
+  shareExternalList,
+  completeList
 } from '../helpers/dbhelper';
 import '../styles/List.scss';
 
@@ -22,7 +24,8 @@ const List = (props) => {
   const [isInvalidList, setisInvalidList] = useState(false);
   const [shareBtnState, setShareBtnState] = useState(false);
   const [deleteBtnDisabled, setDeleteBtnDisabled] = useState(false);
-  const [copied, setCopied] = useState('');
+  const [copiedFrom, setCopiedFrom] = useState('');
+  const [isFinished, setIsFinished] = useState(false);
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -37,13 +40,14 @@ const List = (props) => {
         if (idbList === undefined) {
           throw new Error('list does not exist');
         }
-        const { name, html, backgroundColor, copiedFrom } = idbList;
+        const { name, html, backgroundColor, copiedFrom, isFinished } = idbList;
         // ...update title
         document.title = name;
         setName(name);
         setHtml(html);
         setBackgroundColor(backgroundColor);
-        setCopied(copiedFrom);
+        setCopiedFrom(copiedFrom);
+        setIsFinished(isFinished);
       } catch (error) {
         document.title = 'list error';
         console.log(error);
@@ -95,9 +99,21 @@ const List = (props) => {
     }
   };
 
-  const completeTask = () => {
-    // TODO:
-    console.log('task completed!');
+  const complete = async () => {
+    try {
+      const list = await completeList(_id);
+      if (list !== undefined) {
+        await updateListPromise(list);
+      }
+      setIsFinished(true);
+      togglePopup('Completion notification sent!');
+    } catch (error) {
+      if (error.message === 'Error: no token') {
+        togglePopup('You need to be logged in to complete this list.');
+      } else {
+        togglePopup(error.message);
+      }
+    }
   };
 
 
@@ -127,8 +143,8 @@ const List = (props) => {
       <div className="list-header">
         <h1 className='h1'>{name}</h1>
         <button className='btn btn--list btn--edit' onClick={editList}>edit</button>
-        {copied ?
-          <button className='btn btn--list btn--complete' disabled={shareBtnState} onClick={completeTask}>complete</button>
+        {copiedFrom && !isFinished ?
+          <button className='btn btn--list btn--complete' disabled={shareBtnState} onClick={complete}>complete</button>
           :
           <button id='share' className='btn btn--list btn--share' disabled={shareBtnState} onClick={shareList} data-clipboard-text={`http://localhost:8080/lists/${_id}/shared`}>share</button>
         }
