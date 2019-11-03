@@ -26,6 +26,7 @@ const List = (props) => {
   const [deleteBtnDisabled, setDeleteBtnDisabled] = useState(false);
   const [copiedFrom, setCopiedFrom] = useState('');
   const [isFinished, setIsFinished] = useState(false);
+  const [list, setList] = useState(null);
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -40,6 +41,7 @@ const List = (props) => {
         if (idbList === undefined) {
           throw new Error('list does not exist');
         }
+        setList(idbList);
         const { name, html, backgroundColor, copiedFrom, isFinished } = idbList;
         // ...update title
         document.title = name;
@@ -92,6 +94,11 @@ const List = (props) => {
         togglePopup(errMsg);
       } else {
         togglePopup(response.msg);
+        if (response.msg === 'Your list is now private.') {
+          await updateListPromise({ ...list, isPrivate: true });
+        } else {
+          await updateListPromise({ ...list, isPrivate: false });
+        }
       }
     } catch (error) {
       setShareBtnState(false);
