@@ -11,6 +11,10 @@ const Home = () => {
   useEffect(() => {
     document.title = title;
   }, [title]);
+  const routeToDonate = () => {
+    window.location.href = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KA4UXP6PBC5P4&source=url';
+  };
+
   return (
     <div className='container container-home'>
       <TitleHeader />
@@ -30,7 +34,7 @@ const Home = () => {
           <div className="note note--how5">When viewing your lists, you will be able to delete, edit, or share them.</div>
           <div className="note note--how6">Optionally you can set up email notifications for when a task has been completed by someone you have shared a list with. These can be turned on or off for specific tasks.</div>
           <div className="note note--donate">This app is completely free and ad-free. If you enjoy it, please consider a donation. My son and I thank you for your support!
-            <button className='btn-donate'></button>
+            <button className='btn btn-donate' onClick={routeToDonate}></button>
           </div>
           <img className='our-pic' src={ourPic} alt="" />
         </div>

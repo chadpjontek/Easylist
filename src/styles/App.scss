@@ -371,6 +371,8 @@ nav {
   background-color: transparent;
   justify-self: center;
   border: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-out;
 }
 
 .our-pic {
@@ -565,6 +567,9 @@ nav {
     grid-column: 1 / 2;
     grid-row:  4 / 5;
     transform: rotate(7deg) translate(100px, -154px);
+    &.donate-page {
+      margin: 180px auto 0;
+    }
   }
   .our-pic {
     margin: 0;
@@ -572,6 +577,9 @@ nav {
     grid-column: 1 / 2;
     grid-row:  5 / 6;
     transform: rotate(-12.66deg) scale(1.5) translate(97px, -33px);
+    &.donate-page {
+      margin: 0 auto;
+    }
   }
 }
 
@@ -579,5 +587,9 @@ nav {
 
   .btn--primary:hover {
     box-shadow: $primary-hover;
+  }
+
+  .btn-donate:hover {
+    box-shadow: $purple-hover;
   }
 }
