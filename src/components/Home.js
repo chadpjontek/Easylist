@@ -45,10 +45,18 @@ const Home = () => {
             Copyright 2019 - Chad Pjontek
           </p>
           <div className="container--icons">
-            <img className='icon' src={web} alt="website icon" />
-            <img className='icon' src={github} alt="github icon" />
-            <img className='icon' src={twitter} alt="twitter icon" />
-            <img className='icon' src={linkedin} alt="linkedIn icon" />
+            <a href="https://www.chad-pjontek.com/">
+              <img className='icon' src={web} alt="website icon" />
+            </a>
+            <a href="https://github.com/chadpjontek">
+              <img className='icon' src={github} alt="github icon" />
+            </a>
+            <a href="https://twitter.com/cpjontek">
+              <img className='icon' src={twitter} alt="twitter icon" />
+            </a>
+            <a href="https://linkedin.com/in/chad-pjontek">
+              <img className='icon' src={linkedin} alt="linkedIn icon" />
+            </a>
           </div>
         </div>
       </footer>
