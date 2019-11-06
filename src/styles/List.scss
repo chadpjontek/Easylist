@@ -13,17 +13,13 @@
 }
 
 .list-header {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr, 1fr, auto;
-  grid-column-gap: 5px;
-  padding: 0 15px;
+  width: 90vw;
+  max-width: 900px;
+  margin: 0 auto;
   background-color: white;
 
   h1 {
     font-size: 20px;
-    grid-column: 1 / 4;
-    grid-row: 1 / 2;
   }
 }
 
@@ -54,17 +50,15 @@
 }
 
 .btn--list {
-  display: inline-flex;
-  justify-content: center;
-  font-family: 'Walter Turncoat', sans-serif;
-  font-weight: 400;
-  width: 100%;
-  grid-row: 2 / 3;
-  color: black;
-  margin: 0 auto;
-  height: 47px;
   font-size: 20px;
-  border: none;
+  font-family: 'Walter Turncoat', sans-serif;
+  height: 47px;
+}
+
+.btn-container {
+  display: grid;
+  column-gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .btn--edit{
@@ -105,6 +99,25 @@
 
   &:active {
     box-shadow: $red-hover;
+  }
+}
+
+.btn--loading{
+  grid-column: 1/4;
+  background: linear-gradient(90deg, $yellow, $green, $blue, $purple, $red, hsla(34, 72%, 93%, 1), $yellow);
+  background-size: 1000%;
+  animation: gradient 5s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+		background-position: 0%;
+  }
+	50% {
+    background-position: 50%;
+	}
+  100% {
+    background-position: 100%;
   }
 }
 

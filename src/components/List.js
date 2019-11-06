@@ -22,11 +22,10 @@ const List = (props) => {
   const [html, setHtml] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
   const [isInvalidList, setisInvalidList] = useState(false);
-  const [shareBtnState, setShareBtnState] = useState(false);
-  const [deleteBtnDisabled, setDeleteBtnDisabled] = useState(false);
   const [copiedFrom, setCopiedFrom] = useState('');
   const [isFinished, setIsFinished] = useState(false);
   const [list, setList] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get/set state of popup
   const { isShowingPopup, togglePopup, message } = usePopup();
@@ -63,6 +62,7 @@ const List = (props) => {
   // Function to delete a list
   const deleteList = async () => {
     try {
+      setIsLoading(true);
       // if list is not local only, add to deleteQueue
       if (!/-/.test(_id)) {
         await addToDeleteQueue({ _id });
@@ -70,9 +70,10 @@ const List = (props) => {
       // Delete the list in IDB
       await deleteListPromise(_id);
       // redirect to lists page
+      setIsLoading(false);
       props.history.push('/lists');
     } catch (error) {
-      setDeleteBtnDisabled(false);
+      setIsLoading(false);
       togglePopup(error);
     }
   };
@@ -86,9 +87,9 @@ const List = (props) => {
         return;
       }
       // Attempt to update list on MongoDB
-      setShareBtnState(true);
+      setIsLoading(true);
       const response = await shareExternalList(_id);
-      setShareBtnState(false);
+      setIsLoading(false);
       console.log(response);
       if (!response) {
         togglePopup(errMsg);
@@ -101,20 +102,23 @@ const List = (props) => {
         }
       }
     } catch (error) {
-      setShareBtnState(false);
+      setIsLoading(false);
       togglePopup(error);
     }
   };
 
   const complete = async () => {
     try {
+      setIsLoading(true);
       const list = await completeList(_id);
       if (list !== undefined) {
         await updateListPromise(list);
       }
       setIsFinished(true);
+      setIsLoading(false);
       togglePopup('Completion notification sent!');
     } catch (error) {
+      setIsLoading(false);
       if (error.message === 'Error: no token') {
         togglePopup('You need to be logged in to complete this list.');
       } else {
@@ -149,13 +153,16 @@ const List = (props) => {
       </Popup >
       <div className="list-header">
         <h1 className='h1'>{name}</h1>
-        <button className='btn btn--list btn--edit' onClick={editList}>edit</button>
-        {copiedFrom && !isFinished ?
-          <button className='btn btn--list btn--complete' disabled={shareBtnState} onClick={complete}>complete</button>
-          :
-          <button id='share' className='btn btn--list btn--share' disabled={shareBtnState} onClick={shareList} data-clipboard-text={`http://localhost:8080/lists/${_id}/shared`}>share</button>
-        }
-        <button className='btn btn--list btn--delete' disabled={deleteBtnDisabled} onClick={deleteList}>delete</button>
+        {isLoading ? <button className='btn btn--list btn--loading'>Loading...</button>
+          : <div className='btn-container'>
+            <button className='btn btn--list btn--edit' onClick={editList}>edit</button>
+            {copiedFrom && !isFinished ?
+              <button className='btn btn--list btn--complete' onClick={complete}>complete</button>
+              :
+              <button id='share' className='btn btn--list btn--share' onClick={shareList} data-clipboard-text={`http://localhost:8080/lists/${_id}/shared`}>share</button>
+            }
+            <button className='btn btn--list btn--delete' onClick={deleteList}>delete</button>
+          </div>}
       </div>
       <div className={`editbox ${backgroundColor}--note`} dangerouslySetInnerHTML={{ __html: html }}></div>
     </div >
