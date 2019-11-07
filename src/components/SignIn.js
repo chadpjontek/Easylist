@@ -64,7 +64,14 @@ const SignIn = (props) => {
         throw new Error('something went wrong');
       } catch (error) {
         setIsLoading(false);
-        const msg = `${error.name} - ${error.message}`;
+        let msg;
+        if (error.name === 'SyntaxError') {
+          msg = 'You have reached your max number of server requests. Try again in a few minutes.';
+        } else if (error.name === 'TypeError') {
+          msg = 'Check your internet connection try again.';
+        } else {
+          msg = `${error.name} - ${error.message}`;
+        }
         togglePopup(msg);
         console.error(error);
       }
