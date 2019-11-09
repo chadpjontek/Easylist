@@ -21,7 +21,7 @@ const Home = () => {
       <main className='main'>
         <div className="container--note">
           <h2 className="main__h2 main__h2--what">What?</h2>
-          <div className="note note--what">Easy List is a task/list maker app that allows you to share your lists with others easily. It&apos;s free to use and there is no download required.</div>
+          <div className="note note--what">EasyList is a list / task manager app that allows you to share your lists with others easily. It&apos;s free to use and there is no download required.</div>
           <h2 className="main__h2 main__h2--why">Why?</h2>
           <div className="note note--why">The goal of Easy List is to keep things as simple as possible while still being a useful tool to track &quot;to-dos&quot; as well as be able to share them with others. </div>
           <h2 className="main__h2 main__h2--how">How?</h2>

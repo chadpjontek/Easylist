@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import '../styles/TitleHeader.scss';
 import logo from '../images/easylist-logo.svg';
 import checkbox from '../images/checkbox.svg';
@@ -8,7 +8,7 @@ const TitleHeader = () => {
   return (
     <div className='TitleHeader'>
       <img className='TitleHeader__img' src={logo} alt="Easy List logo" />
-      <p className='TitleHeader__description'>A shareable list app.</p>
+      <p className='TitleHeader__description'>A shareable list app and task manager.</p>
       <br />
       <ul className="TitleHeader__list">
         <li>
