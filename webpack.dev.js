@@ -79,15 +79,15 @@ module.exports = merge(common, {
     ]
   },
   plugins: [
-    // new CopyWebpackPlugin([
-    //   'src/sw.js',
-    //   {
-    //     from: 'src/icons',
-    //     to: './icons',
-    //   },
-    //   'src/manifest.json',
-    //   'src/browserconfig.xml'
-    // ]),
+    new CopyWebpackPlugin([
+      'src/sw.js',
+      {
+        from: 'src/icons',
+        to: './icons',
+      },
+      'src/manifest.json',
+      'src/browserconfig.xml'
+    ]),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',

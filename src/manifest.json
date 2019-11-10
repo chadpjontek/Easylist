@@ -1,7 +1,7 @@
 {
   "name": "EasyList.link",
   "short_name": "EasyList",
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#3F88C5",
   "background_color": "#ffffff",

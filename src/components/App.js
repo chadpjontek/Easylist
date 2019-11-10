@@ -21,6 +21,12 @@ const List = lazy(() => import(/* webpackChunkName: "List" */'./List'));
 const ListCopy = lazy(() => import(/* webpackChunkName: "ListCopy" */'./ListCopy'));
 const NoMatch = lazy(() => import(/* webpackChunkName: "NoMatch" */'./NoMatch'));
 
+// If servive workers are supported, register ours.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('./sw.js')
+    .then(function () { console.log('Service Worker Registered'); }); // eslint-disable-line no-console
+}
 
 const App = () => {
 
