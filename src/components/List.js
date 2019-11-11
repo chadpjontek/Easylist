@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
 import ClipboardJS from 'clipboard';
-
+import '../styles/List.scss';
 import {
+  staticServerUrl,
   getListPromise,
   deleteListPromise,
   updateListPromise,
@@ -11,7 +12,7 @@ import {
   shareExternalList,
   completeList
 } from '../helpers/dbhelper';
-import '../styles/List.scss';
+
 
 const List = (props) => {
   // get _id from location
@@ -159,7 +160,7 @@ const List = (props) => {
             {copiedFrom && !isFinished ?
               <button className='btn btn--list btn--complete' onClick={complete}>complete</button>
               :
-              <button id='share' className='btn btn--list btn--share' onClick={shareList} data-clipboard-text={`http://localhost:8080/lists/${_id}/shared`}>share</button>
+              <button id='share' className='btn btn--list btn--share' onClick={shareList} data-clipboard-text={`${staticServerUrl}/lists/${_id}/shared`}>share</button>
             }
             <button className='btn btn--list btn--delete' onClick={deleteList}>delete</button>
           </div>}

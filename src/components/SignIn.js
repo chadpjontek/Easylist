@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Popup from './Popup';
 import usePopup from '../hooks/usePopup';
 import Spinner from '../components/Spinner';
-import { clearTokens, addToken } from '../helpers/dbhelper';
+import { apiServerUrl, clearTokens, addToken } from '../helpers/dbhelper';
 import '../styles/Signin.scss';
 
 const SignIn = (props) => {
@@ -37,7 +37,7 @@ const SignIn = (props) => {
       try {
         // Show spinner while making network request
         setIsLoading(true);
-        const response = await fetch('http://localhost:3000/api/users/signin', {
+        const response = await fetch(`${apiServerUrl}/api/users/signin`, {
           body: JSON.stringify({ email, password }),
           mode: 'cors',
           method: 'POST',

@@ -1,5 +1,16 @@
 import { openDB } from 'idb';
 
+// Set static and api server urls based on if in development or production
+let staticServerUrl, apiServerUrl;
+// eslint-disable-next-line no-undef
+if (PRODUCTION) {
+  staticServerUrl = 'https://easylist.link';
+  apiServerUrl = 'https://easylist-link.herokuapp.com';
+} else {
+  staticServerUrl = 'http://localhost:8080';
+  apiServerUrl = 'http://localhost:3000';
+}
+
 // ===========
 // IDB SECTION
 // ===========
@@ -111,7 +122,7 @@ const getExternalLists = async () => {
     if (!token) {
       throw new Error('no token');
     }
-    const response = await fetch('http://localhost:3000/api/lists', {
+    const response = await fetch(`${apiServerUrl}/api/lists`, {
       mode: 'cors',
       method: 'GET',
       headers: {
@@ -142,7 +153,7 @@ const getExternalList = async (id) => {
     if (!token) {
       throw new Error('no token');
     }
-    const response = await fetch(`http://localhost:3000/api/lists/${id}`, {
+    const response = await fetch(`${apiServerUrl}/api/lists/${id}`, {
       mode: 'cors',
       method: 'GET',
       headers: {
@@ -177,7 +188,7 @@ const createExternalList = async (list) => {
     if (!token) {
       throw new Error('no token');
     }
-    const response = await fetch('http://localhost:3000/api/lists', {
+    const response = await fetch(`${apiServerUrl}/api/lists`, {
       body: JSON.stringify(list),
       mode: 'cors',
       method: 'POST',
@@ -213,7 +224,7 @@ const updateExternalList = async (list) => {
       throw new Error('no token');
     }
     const { _id, name, html, backgroundColor, notificationsOn, isPrivate, updatedAt, isFinished, copiedFrom } = list;
-    const response = await fetch(`http://localhost:3000/api/lists/${_id}`, {
+    const response = await fetch(`${apiServerUrl}/api/lists/${_id}`, {
       body: JSON.stringify({ name, html, backgroundColor, notificationsOn, isPrivate, updatedAt, isFinished, copiedFrom }),
       mode: 'cors',
       method: 'PUT',
@@ -250,7 +261,7 @@ const deleteExternalList = async (_id) => {
       throw new Error('no token');
     }
     // send request to delete list
-    const response = await fetch(`http://localhost:3000/api/lists/${_id}`, {
+    const response = await fetch(`${apiServerUrl}/api/lists/${_id}`, {
       mode: 'cors',
       method: 'DELETE',
       headers: {
@@ -290,7 +301,7 @@ const shareExternalList = async (_id) => {
     if (!token) {
       throw new Error('no token');
     }
-    const response = await fetch(`http://localhost:3000/api/lists/${_id}/share`, {
+    const response = await fetch(`${apiServerUrl}/api/lists/${_id}/share`, {
       mode: 'cors',
       method: 'PUT',
       headers: {
@@ -321,7 +332,7 @@ const shareExternalList = async (_id) => {
  */
 const getSharedList = async (id) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/lists/${id}/copy`, {
+    const response = await fetch(`${apiServerUrl}/api/lists/${id}/copy`, {
       mode: 'cors',
       method: 'GET',
       headers: {
@@ -351,7 +362,7 @@ const completeList = async (id) => {
     if (!token) {
       throw new Error('no token');
     }
-    const response = await fetch(`http://localhost:3000/api/lists/${id}/complete`, {
+    const response = await fetch(`${apiServerUrl}/api/lists/${id}/complete`, {
       mode: 'cors',
       method: 'PUT',
       headers: {
@@ -488,6 +499,8 @@ const syncLists = async () => {
 };
 
 export {
+  staticServerUrl,
+  apiServerUrl,
   getToken,
   addListPromise,
   getListPromise,

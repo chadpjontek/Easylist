@@ -29,8 +29,6 @@ if ('serviceWorker' in navigator) {
 }
 
 const App = () => {
-
-  // TODO: update app state/reducer if global state is necessary
   // initialize state
   const initialState = {
   };

@@ -1,4 +1,5 @@
 // Webpack production configuration
+const webpack = require('webpack');
 
 /**
  * This utility allows webpack to 'merge' configurations together.
@@ -117,6 +118,9 @@ module.exports = merge(common, {
       template: 'src/index.html',
       chunks: ['index'],
       minify
+    }),
+    new webpack.DefinePlugin({
+      PRODUCTION: JSON.stringify(true)
     })
   ]
 });
