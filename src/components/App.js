@@ -4,7 +4,7 @@ import { useTransition, animated } from 'react-spring';
 
 import Loading from './Loading';
 import useRouter from '../hooks/useRouter';
-import Header from '../components/Header';
+import Header from './Header';
 import { StateProvider } from '../hooks/stateManager';
 import '../styles/App.scss';
 
