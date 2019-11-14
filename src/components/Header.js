@@ -17,7 +17,7 @@ export default function Header() {
     <header>
       <nav>
         <div className="nav-container">
-          <div className="logo"><Link exact to='/' onClick={closeNav}>✅ EasyList.link</Link></div>
+          <div className="logo"><Link exact to='/' onClick={closeNav}><span role='img' aria-label='checkmark emoji'>✅</span> EasyList.link</Link></div>
           <div onClick={toggleNav} className="hamburger">
             <div className={isNavOpen ? 'line open' : 'line'}></div>
             <div className={isNavOpen ? 'line open' : 'line'}></div>
@@ -27,7 +27,7 @@ export default function Header() {
             <li><Link to='/signin' onClick={toggleNav}>Sign in</Link></li>
             <li><Link to='/lists/create' onClick={toggleNav}>Create a list</Link></li>
             <li><Link to='/lists' onClick={toggleNav}>View your lists</Link></li>
-            <li><Link to='/donate' onClick={toggleNav}>Donate ❤️</Link></li>
+            <li><Link to='/donate' onClick={toggleNav}>Donate <span role='img' aria-label='heart emoji'>❤️</span></Link></li>
           </ul>
         </div>
       </nav>

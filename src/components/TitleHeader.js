@@ -12,18 +12,18 @@ const TitleHeader = () => {
       <br />
       <ul className="TitleHeader__list">
         <li>
-          <img className='TitleHeader__checkbox' src={checkbox} />
-          <img className='TitleHeader__checkmark' src={checkmark} />
+          <img className='TitleHeader__checkbox' src={checkbox} alt='checkbox' />
+          <img className='TitleHeader__checkmark' src={checkmark} alt='checkmark' />
           <span className="TitleHeader__checkbox-label">Make a list.</span>
         </li>
         <li>
-          <img className='TitleHeader__checkbox' src={checkbox} />
-          <img className='TitleHeader__checkmark' src={checkmark} />
+          <img className='TitleHeader__checkbox' src={checkbox} alt='checkbox' />
+          <img className='TitleHeader__checkmark' src={checkmark} alt='checkmark' />
           <span className="TitleHeader__checkbox-label">Save it.</span>
         </li>
         <li>
-          <img className='TitleHeader__checkbox' src={checkbox} />
-          <img className='TitleHeader__checkmark' src={checkmark} />
+          <img className='TitleHeader__checkbox' src={checkbox} alt='checkbox' />
+          <img className='TitleHeader__checkmark' src={checkmark} alt='checkmark' />
           <span className="TitleHeader__checkbox-label">Share it.</span>
         </li>
       </ul>
