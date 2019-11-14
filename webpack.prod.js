@@ -111,7 +111,8 @@ module.exports = merge(common, {
       },
       'src/manifest.json',
       'src/browserconfig.xml',
-      'src/_redirects'
+      'src/_redirects',
+      'src/robot.txt'
     ]),
     new HtmlWebpackPlugin({
       filename: 'index.html',
