@@ -1,5 +1,5 @@
 // store static cache name in a variable for future app updates
-const staticCacheName = 'easylist-v1.0';
+const staticCacheName = 'easylist-v1.1';
 
 // install the service worker and cache the files
 self.addEventListener('install', e => {
