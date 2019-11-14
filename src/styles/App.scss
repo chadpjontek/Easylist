@@ -394,6 +394,7 @@ nav {
 .container--icons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
   margin: 0 auto;
   padding-bottom: 15px;
   max-width: 400px;
@@ -404,6 +405,9 @@ nav {
   }
 }
 
+footer {
+  background: white;
+}
 
 // media queries
 /* Less than 460 tall*/
